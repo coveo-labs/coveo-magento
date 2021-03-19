@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <!-- Tracking -->
+            <block class="Coveo\Search\Block\Tracking\ProductView" name="coveo_tracking_product_view" template="Coveo_Search::tracking/product_view.phtml" ifconfig="coveo/active/tracking" />
+        </referenceContainer>
+    </body>
+</page>

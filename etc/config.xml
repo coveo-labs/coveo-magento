@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <coveo>
+            <active>
+                <frontend>1</frontend>
+            </active>
+            <server>
+                <api_key_index />
+                <api_key_search />
+                <api_org />
+                <api_source />
+                <api_base_url>https://api.cloud.coveo.com/push/v1</api_base_url>
+                <api_search_url>https://platform.cloud.coveo.com/rest/search/v2</api_search_url>
+                <api_base>https://www.magento.com/</api_base>
+                <variant_as_product>1</variant_as_product>
+                <send_report>1</send_report>
+                <debug_mode>0</debug_mode>
+            </server>
+            <search>
+                <fallback_enable>0</fallback_enable>
+                <default_limit>250</default_limit>
+                <message_style><![CDATA[
+    .message.tooso{
+        margin: 0 0 10px;
+        padding: 12px 20px 12px 25px;
+        padding-left: 25px;
+        display: block;
+        font-size: 1.3rem;
+        background: #f0f0f0;
+        padding-left: 45px;
+        position: relative;
+    }
+                ]]></message_style>
+                <filter_price_override>price</filter_price_override>
+            </search>
+            <analytics>
+                <api_version>1</api_version>
+                <include_library>1</include_library>
+                <api_endpoint>https://platform.cloud.coveo.com/rest/ua/v15/analytics/</api_endpoint>
+                <library_endpoint>https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js</library_endpoint>
+                <track_userid>1</track_userid>
+                <searchhub>search</searchhub>
+                <tab>products</tab>
+                <product_link_selector>.product-item-info > a.product</product_link_selector>
+                <product_container_selector>#maincontent</product_container_selector>
+                <product_link_attribute>data-product-sku</product_link_attribute>
+                <search_id_attribute>data-search-id</search_id_attribute>
+                <pagination_type>no-ajax</pagination_type>
+            </analytics>
+            <suggestion>
+                <include_library>0</include_library>
+                <library_endpoint></library_endpoint>
+                <input_selector>#search</input_selector>
+                <buckets>relevance,trending</buckets>
+                <limit>20</limit>
+                <groupby>1</groupby>
+                <nocache>1</nocache>
+                <onselect_behaviour>submit</onselect_behaviour>
+                <onselect_callback>function() { this.form.submit(); }</onselect_callback>
+                <minchars>1</minchars>
+                <width>auto</width>
+                <width_custom>300</width_custom>
+                <zindex>100000</zindex>
+            </suggestion>
+           
+          </coveo>
+    </default>
+</config>

@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <virtualType name="CoveoLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers"  xsi:type="array">
+                <item name="debug" xsi:type="object">Coveo\Search\Model\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Coveo\Search\Model\Service\Logger">
+        <arguments>
+            <argument name="logger" xsi:type="object">CoveoLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Catalog\Model\Layer\Search\CollectionFilter">
+        <plugin name="searchQuery" type="Magento\CatalogSearch\Model\Layer\Search\Plugin\CollectionFilter" disabled="true" />
+        <plugin name="searchQueryCoveo" type="Coveo\Search\Plugin\Model\Layer\Search\CollectionFilter\ApplyCoveoSearch" />
+    </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="CoveoGenerateDummyData" xsi:type="object">Coveo\Search\Console\GenerateDummyData</item>
+                <item name="CoveoSendCatalogIndexData" xsi:type="object">Coveo\Search\Console\SendCatalogIndexData</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\CatalogSearch\Block\Result">
+        <plugin name="overrideQueryCoveo" type="Coveo\Search\Plugin\Block\Result" />
+    </type>
+    
+    <preference for="Coveo\Search\Api\Service\Config\SearchConfigInterface"
+                type="Coveo\Search\Model\Service\Config\SearchConfig" />
+
+    <preference for="Coveo\Search\Api\Service\Config\AnalyticsConfigInterface"
+                type="Coveo\Search\Model\Service\Config\AnalyticsConfig" />
+
+    <preference for="Coveo\Search\Api\Service\Config\IndexerConfigInterface"
+                type="Coveo\Search\Model\Service\Config\IndexerConfig" />
+
+    <preference for="Coveo\Search\Api\Service\Config\SuggestionConfigInterface"
+                type="Coveo\Search\Model\Service\Config\SuggestionConfig" />
+
+    <preference for="Coveo\Search\Api\Service\Config\SkinConfigInterface"
+                type="Coveo\Search\Model\Service\Config\SkinConfig" />
+
+    <preference for="Coveo\Search\Api\Service\Config\SdkConfigInterface"
+                type="Coveo\Search\Model\Service\Config\SdkConfig" />
+
+    <preference for="Coveo\Search\Api\Service\Config\SpeechToTextConfigInterface"
+                type="Coveo\Search\Model\Service\Config\SpeechToTextConfig" />
+
+    <preference for="Coveo\Search\Api\Service\ConfigInterface"
+                type="Coveo\Search\Model\Service\Config" />
+
+    <preference for="Coveo\Search\Api\Service\LoggerInterface"
+                type="Coveo\Search\Model\Service\Logger" />
+
+    <preference for="Coveo\Search\Api\Service\SearchInterface"
+                type="Coveo\Search\Model\Service\Search" />
+
+    <preference for="Coveo\Search\Api\Service\Search\RequestParserInterface"
+                type="Coveo\Search\Model\Service\Search\RequestParser" />
+
+    <preference for="Coveo\Search\Api\Service\Search\UrlRewriteSwitcherInterface"
+                type="Coveo\Search\Model\Service\Search\UrlRewriteSwitcher" />
+
+    <preference for="Coveo\Search\Api\Service\SessionInterface"
+                type="Coveo\Search\Model\Service\Session" />
+
+    <preference for="Coveo\Search\Api\Service\TrackingInterface"
+                type="Coveo\Search\Model\Service\Tracking" />
+
+    <preference for="Coveo\Search\Api\Service\Indexer\CatalogInterface"
+                type="Coveo\Search\Model\Service\Indexer\Catalog" />
+
+    <preference for="Coveo\Search\Api\Service\Indexer\AttributesValuesInterface"
+                type="Coveo\Search\Model\Service\Indexer\AttributesValues" />
+
+    <preference for="Coveo\Search\Api\Service\Indexer\StockInterface"
+                type="Coveo\Search\Model\Service\Indexer\Stock" />
+
+    <preference for="Coveo\Search\Api\Service\Indexer\DataSenderInterface"
+                type="Coveo\Search\Model\Service\Indexer\DataSender" />
+
+    <type name="Coveo\Search\Api\Service\Indexer\CatalogInterface">
+        <arguments>
+            <argument name="enrichers" xsi:type="array">
+                <item name="categories" xsi:type="object">Coveo\Search\Model\Service\Indexer\Enricher\CategoriesEnricher</item>
+                <item name="gallery" xsi:type="object">Coveo\Search\Model\Service\Indexer\Enricher\GalleryEnricher</item>
+                <item name="variants" xsi:type="object">Coveo\Search\Model\Service\Indexer\Enricher\VariantsEnricher</item>
+                <item name="stock" xsi:type="object">Coveo\Search\Model\Service\Indexer\Enricher\StockEnricher</item>
+                <item name="attributes" xsi:type="object">Coveo\Search\Model\Service\Indexer\Enricher\AttributesEnricher</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Customer\CustomerData\Customer">
+        <plugin name="Coveo_additional_section_data" type="Coveo\Search\Plugin\CustomerData\AddDataForCustomerSection" />
+    </type>
+
+    <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\SearchResultApplier">
+        <plugin name="Coveo_disable_result_applier" type="Coveo\Search\Plugin\Model\ResourceModel\Fulltext\Collection\SearchResultApplier\DisableApply" />
+    </type>
+
+    <preference for="Magento\CatalogSearch\Model\ResourceModel\Fulltext\SearchCollection" type="Coveo\Search\Model\ResourceModel\Fulltext\Collection"/>
+    
+
+  </config>

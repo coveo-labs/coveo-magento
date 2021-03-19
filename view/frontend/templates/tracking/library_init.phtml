@@ -1,0 +1,37 @@
+<?php
+/** @var \Coveo\Search\Block\Tracking\LibraryInit $block */
+$debugMode = $block->isDebugMode();
+$trackingKey = $block->getKey();
+$cookieDomain = $block->getCookieDomain('auto');
+$currency = $block->getCurrencyCode();
+$uid = $block->getCustomerId();
+$storeid = $block->getStoreCode();
+$siteid = $block->getLanguage();
+$searchid = $block->getSearchId();
+?>
+
+<script id="<?=$block->getScriptId()?>" type="text/javascript">
+
+  var coveoinit=false;
+  function initCoveo(){
+    if (coveoinit) return;
+    coveoinit=true;
+    coveoua("init", "<?=$trackingKey?>");
+    coveoua('set', 'custom',  {
+      context_store_id: '<?=$storeid?>',
+      context_website: '<?=$siteid?>'
+    });
+<?php if($currency): ?>
+  coveoua('set','currencyCode','<?=$currency?>');
+<?php endif; ?>
+<?php if($searchid!='' && $searchid!=null): ?>
+  coveoua('set','searchId','<?=$searchid?>');
+<?php endif; ?>
+<?php if($uid!=''): ?>
+  coveoua('set','userId','<?=$uid?>');
+<?php endif; ?>
+<?php if($debugMode): ?>
+  coveoua('set','debug','true');
+<?php endif; ?>
+  }
+</script>

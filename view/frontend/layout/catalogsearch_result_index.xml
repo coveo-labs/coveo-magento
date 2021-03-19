@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <!-- Tracking -->
+            <block class="Coveo\Search\Block\Tracking\ClickAfterSearch" cacheable="false" name="coveo_tracking_click_after_search" template="Coveo_Search::tracking/click_after_search.phtml" ifconfig="coveo/active/tracking"/>
+            <!-- Search -->
+            <block class="Coveo\Search\Block\Search\MessageStyle" cacheable="false" name="coveo_search_message_style" template="Coveo_Search::search/message_style.phtml" ifconfig="coveo/active/frontend" />
+        </referenceContainer>
+    </body>
+</page>

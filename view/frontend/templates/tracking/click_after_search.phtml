@@ -1,0 +1,44 @@
+<?php
+/** @var \Coveo\Search\Block\Tracking\ClickAfterSearch $block */
+$searchResult = $block->getSearchResult();
+$searchId = null;
+$searchData = null;
+if ($searchResult !== null) {
+    $searchId = $searchResult->getSearchId();
+    $searchData = $searchResult->getResponse();
+}
+
+$productContainerSelector = $block->getProductContainerSelector();
+$productLinkSelector = $block->getProductLinkSelector();
+$productAttributeName = $block->getProductAttributeName();
+$searchIdAttribute = $block->getSearchIdAttribute();
+$productsData = $block->getProducts();
+$currentPage = $block->getCurrentPage();
+$pageSize = $block->getCurrentPageSize();
+$paginationType = $block->getPaginationType();
+?>
+
+<?php if ($block->config->isDebugModeEnabled()): ?>
+<script id="coveo-search-debug" type="text/javascript">
+    console.debug('Coveo: search id is <?=$searchId ?: 'not set'?>');
+    console.debug('Coveo: search data:', <?=$searchData ? json_encode($searchData) : "'not set'"?>);
+</script>
+<?php endif; ?>
+
+<script id="<?=$block->getScriptId()?>" type="text/x-magento-init">
+    {
+        "<?=$productContainerSelector ?>": {
+            "coveoClickAfterSearch": {
+                "searchId": "<?=$searchId?>",
+                "productLinksSelector": "<?=$productLinkSelector ?>",
+                "products": <?=json_encode($productsData)?>,
+                "attributeName": "<?=$productAttributeName ?>",
+                "searchIdAttribute": "<?=$searchIdAttribute ?>",
+                "debug": <?=$block->config->isDebugModeEnabled() ? 'true' : 'false'?>,
+                "currentPage": <?=$currentPage?>,
+                "pageSize": <?=$pageSize?>,
+                "paginationType": "<?=$paginationType?>"
+            }
+        }
+    }
+</script>

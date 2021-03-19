@@ -1,0 +1,10 @@
+<?php
+/** @var \Coveo\Search\Block\Sdk\LibraryInit $block */
+$initParams = $block->getInitParams();
+?>
+
+<script id="<?=$block->getScriptId()?>" type="text/javascript">
+    window.coveoAsyncInit = function () {
+        Coveo.init(<?=json_encode($initParams)?>);
+    };
+</script>

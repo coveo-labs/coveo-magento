@@ -1,0 +1,10 @@
+<?php
+/** @var \Coveo\Search\Block\Search\MessageStyle $block */
+$style = $block->getMessageStyle();
+?>
+
+<?php if ($style !== null): ?>
+<style id="coveo-search-style-message" type="text/css">
+    <?=$style?>
+</style>
+<?php endif; ?>

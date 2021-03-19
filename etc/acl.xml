@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Coveo_Search::operations" title="Coveo Operations">
+                    <resource id="Coveo_Search::catalog_reindex" title="Execute Catalog Reindex"/>
+                    <resource id="Coveo_Search::attributes_values_reindex" title="Execute Attributes Values Reindex"/>
+                    <resource id="Coveo_Search::send_catalog_data" title="Send Index Data"/>
+                    <resource id="Coveo_Search::send_stock_data" title="Send Stock Data"/>
+                    <resource id="Coveo_Search::clean_log" title="Clean Log"/>
+                    <resource id="Coveo_Search::download_log" title="Download Log"/>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Coveo_Search::config" title="Coveo Section"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
