@@ -1,24 +1,24 @@
-# Tooso Search for Magento 2
+# Coveo Search for Magento 2
 
-[Tooso](http://tooso.ai) is a cloud-based, multi-language search tool for e-commerce.
+[Coveo](https://www.coveo.com) is a cloud-based, multi-language search tool for e-commerce.
 
-This extension replaces the default search of Magento with a typo-tolerant, fast & relevant search experience backed by [Tooso](http://tooso.ai/Default.aspx).
+This extension replaces the default search of Magento with a typo-tolerant, fast & relevant search experience backed by [Coveo](https://www.coveo.com).
 
 ## Description
 
-This extension replaces the default Magento search engine with one based on Tooso API.
+This extension replaces the default Magento search engine with one based on Coveo API.
 It provide the following features:
 
 * Fulltext search for catalog products (currently advanced search is not supported)
 * Scheduled indexing of catalog products (under development)
 * Automatic typo correction (under development)
-* Search keywords suggest (under development)
+* ML Search keywords suggest
 
 ## Requirements
 
 * PHP > 7.0
 * [Composer](https://getcomposer.org/)
-* Magento >= 2.2.6
+* Magento >= 2.3
 
 ## Installation Instructions
 
@@ -26,14 +26,14 @@ It provide the following features:
 
 Install latest version using composer:
 ```bash
-composer require bitbull/magento-2-tooso-search
+composer require coveo/magento-2-search
 ```
 
 ### Specific version
 
 Install a specific version using composer:
 ```bash
-composer require bitbull/magento-2-tooso-search:1.0.0
+composer require coveo/magento-2-search:1.0.0
 ```
 
 ### Development version
@@ -46,35 +46,55 @@ composer config prefer-stable false
 
 Install latest development version using composer:
 ```bash
-composer require bitbull/magento-2-tooso-search:dev-develop
+composer require coveo/magento-2-search:dev-develop
 ```
 
 ## Module Configuration
 
-### Request your API KEY
-Send an email to info@tooso.ai to request your APIKEY
+### Request your Coveo Cloud Organization
+Goto: [Coveo](https://www.coveo.com) 
 
-### Set your API KEY: 
+### Create your Push source
+Goto: [Push](https://docs.coveo.com/en/68)
+Copy the created Push API Key in your configuration.
+
+### Create your Search API key
+Goto: [Search Api](https://docs.coveo.com/en/82).
+Copy the created Push API Key in your configuration.
+
+### Create your Fields (in the Coveo Platform)
+Goto: [Create Fields](https://docs.coveo.com/en/1982).
+
+Create the following fields:
+|---|----|---|
+| Field name | Type | Settings |
+|---|----|---|
+|sku| String | |
+|store_id| String | |
+|price | Decimal | |
+
+
+### Set your configuration: 
 1. Under __API Configuration__
-* Insert your API key into __API key__ field
-* Insert __http://v{apiVersionWithNoDot}.api.tooso.ai__ into __API base url__ field. The current supported version is 1, so the placeholder {apiVersionWithNoDot} should be replaced by 1.
-* __Send report__: __YES__ to send a report to Tooso when an API error occourred	
+* Insert 
+
+* __Send report__: __YES__ to send a report to Coveo when an API error occourred	
 * __Debug mode__:  __Yes__ to enable more verbose logging for debug purpose
 2. Save configuration
 
 
-## Programmatically use Tooso service
+## Programmatically use Coveo service
 
-If you would like to call Tooso service that currently are not supported with the plugin we suggest this configuration.
+If you would like to call Coveo service that currently are not supported with the plugin we suggest this configuration.
 
-Include in your class a dependency from `Bitbull\Tooso\Api\Service\ClientInterface` and let DI system do the rest:
+Include in your class a dependency from `Coveo\Search\Api\Service\ClientInterface` and let DI system do the rest:
 ```php
 <?php
 
-use Tooso\SDK\ClientBuilder;
-use Bitbull\Tooso\Api\Service\ConfigInterface;
-use Bitbull\Tooso\Api\Service\TrackingInterface;
-use Bitbull\Tooso\Api\Service\LoggerInterface;
+use Coveo\SDK\ClientBuilder;
+use Coveo\Search\Api\Service\ConfigInterface;
+use Coveo\Search\Api\Service\TrackingInterface;
+use Coveo\Search\Api\Service\LoggerInterface;
 
 class MyServiceClass
 {
@@ -122,33 +142,35 @@ class MyServiceClass
 }
 
 ```
-build the client instance using a `Tooso\SDK\ClientBuilder` instance
+build the client instance using a `Coveo\SDK\ClientBuilder` instance
 ```php
 <?php
     
     /**
      * Get Client
      *
-     * @return \Tooso\SDK\Client
+     * @return \Coveo\SDK\Client
      */
     protected function getClient()
     {
         return $this->clientBuilder
-            ->withApiKey($this->config->getApiKey())
-            ->withApiVersion($this->config->getApiVersion())
-            ->withApiBaseUrl($this->config->getApiBaseUrl())
+            ->withApiKey($this->config->getApiKeySearch())
+            ->withApiBaseUrl($this->config->getApiSearchUrl())
+            ->withSessionStorage($this->tracking->getSession())
             ->withLanguage($this->config->getLanguage())
-            ->withStoreCode($this->config->getStoreCode())
-            ->withAgent($this->tracking->getApiAgent()) //optional
-            ->withLogger($this->logger) //optional
+            ->withStoreCode($this->config->getStoreId())
+            ->withAgent($this->tracking->getApiAgent())
+            ->withLogger($this->logger)
             ->withPipeline('Recommendations') //optional Query Pipeline to use
             ->withRecommendations(true)
             ->build();
     }
-    
 ``` 
+The `withRecommendations` will enable the proper analytics events for a recommendation call.
+The `withPipeline` you can target a specific pipeline to trigger the results on.
 
-this allow you to create a `Tooso\SDK\Client` instance to made any HTTP call to Tooso API with the pre-configured required parameters:
+
+this allow you to create a `Coveo\SDK\Client` instance to made any HTTP call to Coveo API with the pre-configured required parameters:
 ```php
 <?php
 
@@ -158,16 +180,16 @@ this allow you to create a `Tooso\SDK\Client` instance to made any HTTP call to 
     protected function execute()
     {
         $client = $this->getClient();
-        $result = $client->doRequest('/path/to/service', \Tooso\SDK\Client::HTTP_METHOD_GET, [
+        $result = $client->doRequest('/search', \Coveo\SDK\Client::HTTP_METHOD_GET, [
             'param1' => 'value1',
             'param2' => 'value2'
         ]);
     }
 ```
-access response data from the object of type `Tooso\SDK\Response` returned by `doRequest` method:
+access response data from the object of type `Coveo\SDK\Response` returned by `doRequest` method:
 ```php
 <?php
-$result = $client->doRequest('/path/to/service', \Tooso\SDK\Client::HTTP_METHOD_GET, [
+$result = $client->doRequest('/search', \Coveo\SDK\Client::HTTP_METHOD_GET, [
     'param1' => 'value1',
     'param2' => 'value2'
 ]);
@@ -190,13 +212,13 @@ To do this edit your theme file `view/frontend/templates/product/list.phtml`, in
 ```
 
 If you are using an AJAX pagination approach (for example an infinite scrolling loading) you also have to add an attribute `data-search-id` on the `a` tag with the product's link.
-In order to to this edit your theme file `view/frontend/templates/product/list.phtml` to load the Tooso Search ID value from registry key `tooso_search_response` (available from `\Bitbull\Tooso\Model\Service\Search::SEARCH_RESULT_REGISTRY_KEY` class constant), 
+In order to to this edit your theme file `view/frontend/templates/product/list.phtml` to load the Coveo Search ID value from registry key `coveo_search_response` (available from `\Coveo\Search\Model\Service\Search::SEARCH_RESULT_REGISTRY_KEY` class constant), 
 in this way:
 ```php
 <?php
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-/** @var \Tooso\SDK\Search\Result $searchResult */
-$searchResult = $objectManager->get('Magento\Framework\Registry')->registry(\Bitbull\Tooso\Model\Service\Search::SEARCH_RESULT_REGISTRY_KEY);
+/** @var \Coveo\SDK\Search\Result $searchResult */
+$searchResult = $objectManager->get('Magento\Framework\Registry')->registry(\Coveo\Search\Model\Service\Search::SEARCH_RESULT_REGISTRY_KEY);
 ?>
 
 <!-- your product collection loop -->
