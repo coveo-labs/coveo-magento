@@ -73,6 +73,8 @@ class SuggestionConfig implements SuggestionConfigInterface
 
         $data = [
             'locale' => 'en_us',
+            'visitorId' => '',
+            'searchHub' => '',
             'context_querysuggest' => '1',
             /*"customData"=> $custom,*/
             'context_store_id'=> $this->config->getStoreCode(),
