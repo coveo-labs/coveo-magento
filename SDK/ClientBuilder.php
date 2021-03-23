@@ -9,7 +9,7 @@ use Coveo\Search\SDK\Storage\SessionInterface;
 /**
  * @category Coveo
  * @package  Coveo
- * @author   Fabio Gollinucci <fabio.gollinucci@bitbull.it>
+ * @author   Fabio Gollinucci <fabio.gollinucci@bitbull.it> & Wim Nijmeijer <wnijmeijer@coveo.com>
  */
 final class ClientBuilder
 {

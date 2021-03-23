@@ -86,6 +86,8 @@ class Search implements SearchInterface
      */
     private $cookie;
 
+    private $fromQuerySuggest;
+
     /**
      * Search constructor.
      *
@@ -120,6 +122,7 @@ class Search implements SearchInterface
         $this->requestParser = $requestParser;
         $this->clientBuilder = $clientBuilder;
         $this->resultFactory = $resultFactory;
+        $this->fromQuerySuggest = false;
     }
 
     public function getTracking(){
@@ -128,6 +131,10 @@ class Search implements SearchInterface
 
     public function getSearchConfig(){
       return $this->searchConfig;
+    }
+
+    public function setFromQS(){
+      $this->fromQuerySuggest = true;
     }
 
     /**
@@ -201,7 +208,8 @@ class Search implements SearchInterface
                 $hub,
                 $tab,
                 $this->tracking,
-                $limitPage
+                $limitPage,
+                $this->fromQuerySuggest
             );
             
             $this->logger->debug('[search] Search executed');

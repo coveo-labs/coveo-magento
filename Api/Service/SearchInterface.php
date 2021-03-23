@@ -9,13 +9,14 @@ use Coveo\Search\Api\Service\SessionInterface;
 /**
  * @category Coveo
  * @package  Coveo
- * @author   Fabio Gollinucci <fabio.gollinucci@bitbull.it>
+ * @author   Fabio Gollinucci <fabio.gollinucci@bitbull.it> & Wim Nijmeijer <wnijmeijer@coveo.com>
  */
 interface SearchInterface
 {
 
   public function getTracking();
   public function getSearchConfig();
+  public function setFromQS();
 
     /**
      * Execute Coveo search

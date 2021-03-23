@@ -144,7 +144,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null, $tracking=null, $limitPage=null)
+    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null, $tracking=null, $limitPage=null, $fromQS=null)
     {
         if(self::FORCE_ERROR){
             $query = null;
@@ -196,6 +196,11 @@ class Client implements ClientInterface
             //We got search results now, we now need to sent the /searches Analytics event
             if ($tracking!=null) {
               $actionCause="searchFromLink";
+              //If from Query suggest
+              if ($fromQS!=null) {
+                $actionCause="omniboxFromLink";
+
+              }
               $actionType="interface";
             if ($this->_useRecommendations) {
               $actionCause="recommendationInterfaceLoad";

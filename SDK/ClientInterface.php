@@ -8,7 +8,7 @@ use Coveo\Search\SDK\Search\Result as SearchResult;
 /**
  * @category Coveo
  * @package  Coveo
- * @author   Fabio Gollinucci <fabio.gollinucci@bitbull.it>
+ * @author   Fabio Gollinucci <fabio.gollinucci@bitbull.it> & Wim Nijmeijer <wnijmeijer@coveo.com>
  */
 interface ClientInterface
 {
@@ -33,7 +33,7 @@ interface ClientInterface
      * @return SearchResult
      * @throws Exception
      */
-    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null,$tracking=null, $limitPage=null);
+    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null,$tracking=null, $limitPage=null, $fromQS=null);
 
     /**
      * Send data to index

@@ -11,11 +11,11 @@
             <indexer id="cataloginventory_stock" />
         </dependencies>
     </indexer>
-    <indexer id="coveo_attributes_values" view_id="coveo_attributes_values_flat" class="Coveo\Search\Model\Indexer\AttributesValues">
+   <!-- <indexer id="coveo_attributes_values" view_id="coveo_attributes_values_flat" class="Coveo\Search\Model\Indexer\AttributesValues">
         <title translate="true">Coveo Attributes Values</title>
         <description translate="true">Attributes values syncronization with Coveo service</description>
         <dependencies>
             <indexer id="catalog_product_attribute" />
         </dependencies>
-    </indexer>
+    </indexer> -->
 </config>

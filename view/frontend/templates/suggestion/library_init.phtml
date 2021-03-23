@@ -59,7 +59,7 @@ require([
   }
 
   function getSuggestions (ds = [], metadata) {
-    ds=["wim","wims","wimmsie"];
+    //ds=["wim","wims","wimmsie"];
     const suggestions = [];
     for (let i = 0; i <= ds.length - 1; i += 1) {
         const suggestion = ds[i];
@@ -140,21 +140,22 @@ require([
               (getFromAutocompleteOptions(options, 'onSelect') || (() => {}))
                 .apply(input, [ss]))(this.get(0), suggestion);
           if (window.coveoua && suggestion.data && suggestion.data.id) {
-            const value = [
-              suggestion.value,
-            ];
+            const value = suggestion.value;
             //window.coveoua('set', 'context_querysuggest', 'true');
             /*window.coveoua('set', 'custom',  {
               context_querysuggest: 'true'
     });*/
-            window.coveoua(
-              'send',
-              'event',
-              'suggestions',
-              'select',
-              value.join(':'),
-              { hitCallback: onSelect },
-            );
+    //We need to sent an omniboxfromlink request
+
+              //Set a form parameter so we know it is coming from getSuggestions
+              jQuery(this).append(jQuery('<input>', {
+            type: 'hidden',
+            name: 'FromSuggest',
+            value: true
+        }));
+
+            
+            setTimeout(onSelect, 0);
           } else {
             setTimeout(onSelect, 0);
           }
