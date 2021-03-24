@@ -152,6 +152,16 @@ class LibraryInit extends \Magento\Framework\View\Element\Template implements Sc
         return $this->tracking->getSearchId();
     }
 
+
+     /**
+     * Get api
+     *
+     * @return string
+     */
+    public function getApi(){
+      return str_replace('/v15/analytics/','',$this->analyticsConfig->getAPIEndpoint());
+    }
+
     /**
      * @inheritdoc
      */

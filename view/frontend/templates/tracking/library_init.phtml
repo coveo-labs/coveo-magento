@@ -8,6 +8,7 @@ $uid = $block->getCustomerId();
 $storeid = $block->getStoreCode();
 $siteid = $block->getLanguage();
 $searchid = $block->getSearchId();
+$api = $block->getApi();
 ?>
 
 <script id="<?=$block->getScriptId()?>" type="text/javascript">
@@ -16,7 +17,7 @@ $searchid = $block->getSearchId();
   function initCoveo(){
     if (coveoinit) return;
     coveoinit=true;
-    coveoua("init", "<?=$trackingKey?>");
+    coveoua("init", "<?=$trackingKey?>","<?=$api?>");
     coveoua('set', 'custom',  {
       context_store_id: '<?=$storeid?>',
       context_website: '<?=$siteid?>'
