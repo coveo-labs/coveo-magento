@@ -83,7 +83,7 @@ class ExecuteCoveoSearch implements ObserverInterface
         $fromSuggest = false;
         if (isset($_REQUEST['FromSuggest']) && $_REQUEST['FromSuggest'] == true) {
           $fromSuggest = true;
-          $this->search->setFromQS();
+          $this->search->setFromQS($_REQUEST['Suggest']);
           $this->logger->debug('[catalog search result observer] Executing search from Querysuggest..');
         }
         // Do search

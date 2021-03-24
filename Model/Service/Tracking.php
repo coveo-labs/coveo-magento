@@ -25,6 +25,7 @@ class Tracking implements TrackingInterface
      * @var integer
      */
     const TRACKING_REQUEST_TIMEOUT = 1000;
+    
 
     /**
      * @var LoggerInterface
@@ -375,6 +376,7 @@ class Tracking implements TrackingInterface
             'cu' => $this->getCurrencyCode(),
             'context_store_id'=> $this->config->getStoreCode(),
          'context_website' => $this->config->getLanguage(),
+         'context_version' => $this->getApiAgent(),
             'ul' => $this->config->getLanguage()
             //,
             //'context' => '{"store_id":'.$this->config->getStoreCode().',"website":"'.$this->config->getLanguage().'"}'
@@ -402,9 +404,14 @@ class Tracking implements TrackingInterface
      */
     public function executeTrackingSearchRequest($params)
     {
-      
         $custom = [ 'context_store_id'=> $this->config->getStoreCode(),
-         'context_website' => $this->config->getLanguage()];
+         'context_website' => $this->config->getLanguage(),
+        'context_version' => $this->getApiAgent()];
+        //Check if we have qs in parameters
+        if (isset($params['qs']) && $params['qs']!=null){
+           $custom['suggestions']=str_replace(',',';',$params['qs']);
+        }
+        unset($params['qs']);
         $profilingParams = ['uip' => $this->getRemoteAddr(),
         'userAgent' => $this->getUserAgent(),
         'clientId' => $this->session->getVisitorId(),
@@ -418,9 +425,11 @@ class Tracking implements TrackingInterface
         'tm' => round(microtime(true) * 1000)
          ];
          $profilingParams['uid']='anonymous';
+         $profilingParams['anonymous']="true";
         if ($this->analyticsConfig->isUserIdTrackingEnable() && $this->session->isLoggedIn()) {
             if ($this->session->getCustomerId()!==''){
               $profilingParams['uid'] = $this->session->getCustomerId();
+              $profilingParams['anonymous']="false";
             };
         }
         $params = array_merge([

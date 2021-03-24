@@ -20,6 +20,7 @@ require([
                 console.error('Coveo: Suggestion search input not found');
             }
         });
+    var currentSuggestions=[];
     var magentoAutocomplete = document.getElementById('search_autocomplete');
     if (magentoAutocomplete !== null) {
         console.warn('Coveo: cannot use both Magento autocomplete and Coveo one');
@@ -61,12 +62,14 @@ require([
   function getSuggestions (ds = [], metadata) {
     //ds=["wim","wims","wimmsie"];
     const suggestions = [];
+    currentSuggestions = [];
     for (let i = 0; i <= ds.length - 1; i += 1) {
-        const suggestion = ds[i];
+        const suggestion = ds[i].expression;
         const data = {
           id: suggestion
         };
-        suggestions.push({ value: ds[i], data });
+        suggestions.push({ value: suggestion, data });
+        currentSuggestions.push(suggestion);
     }
     return suggestions;
   };
@@ -81,6 +84,8 @@ require([
       const tid = get(options, 'apiKey', el, 'ts-api-key');
       const endp = get(options, 'endPoint', el, 'ts-api-key');
       const ul = get(options, 'language', el, 'ts-language', 'it_it');
+      const store = get(options, 'context_store_id', el, 'ts-language', 'it_it');
+      const site = get(options, 'context_website', el, 'ts-language', 'it_it');
       const uid = get(options, 'uid', el, 'ts-uid', getFromTa('userId'));
       const v = get(options, 'version', el, 'ts-version', '3');
       let limit = get(options, 'count', el, 'ts-limit', '').split(',');
@@ -115,6 +120,10 @@ require([
           if (!params.dr) jQuery.extend(params, { dr: getFromTa('referrer') });
           if (!params.dp) jQuery.extend(params, { dp: getFromTa('page') });
           if (!params.dt) jQuery.extend(params, { dt: getFromTa('title') });
+          //Add Context
+          var mycontext = {'context_store_id': `${store}`,
+         'context_website': `${site}` };
+          if (!params.context) jQuery.extend(params, { context: JSON.stringify(mycontext)});
           if (!params.count) jQuery.extend(params, { count: firstlimit});
           //jQuery.extend(params, { tm: currentMillis });
           //jQuery.extend(params, { z: uuidv4() });
@@ -129,9 +138,9 @@ require([
           </div>`,
         formatResult: (suggestion, currentValue) => {
           let result = AutocompleteFormatResult(suggestion, currentValue);
-          if (suggestion.data && suggestion.data.hint) {
+          /*if (suggestion.data && suggestion.data.hint) {
             result += `<span class="autocomplete-suggestion-hint">${suggestion.data.hint}</span>`;
-          }
+          }*/
           return result;
         },
         onSelect: (suggestion) => {
@@ -139,8 +148,8 @@ require([
             () =>
               (getFromAutocompleteOptions(options, 'onSelect') || (() => {}))
                 .apply(input, [ss]))(this.get(0), suggestion);
-          if (window.coveoua && suggestion.data && suggestion.data.id) {
-            const value = suggestion.value;
+          if (window.coveoua && suggestion) {
+            const value = suggestion;
             //window.coveoua('set', 'context_querysuggest', 'true');
             /*window.coveoua('set', 'custom',  {
               context_querysuggest: 'true'
@@ -152,6 +161,11 @@ require([
             type: 'hidden',
             name: 'FromSuggest',
             value: true
+        }));
+        jQuery(this).append(jQuery('<input>', {
+            type: 'hidden',
+            name: 'Suggest',
+            value: currentSuggestions
         }));
 
             

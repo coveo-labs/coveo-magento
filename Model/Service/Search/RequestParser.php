@@ -121,6 +121,7 @@ class RequestParser implements RequestParserInterface
         //We need to add the p to the exclusions
         array_push($excludeParams,'p');
         array_push($excludeParams,'FromSuggest');
+        array_push($excludeParams,'Suggest');
         $requestParams = $this->request->getParams();
         $requestParamsKeys = array_filter(array_keys($requestParams),function ($param) use ($excludeParams){
             return !in_array($param, $excludeParams, true);

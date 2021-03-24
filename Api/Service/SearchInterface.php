@@ -16,7 +16,7 @@ interface SearchInterface
 
   public function getTracking();
   public function getSearchConfig();
-  public function setFromQS();
+  public function setFromQS($suggestions);
 
     /**
      * Execute Coveo search

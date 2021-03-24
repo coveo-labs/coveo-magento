@@ -144,7 +144,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null, $tracking=null, $limitPage=null, $fromQS=null)
+    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null, $tracking=null, $limitPage=null, $fromQS=null, $qs=null, $storeId=null)
     {
         if(self::FORCE_ERROR){
             $query = null;
@@ -160,15 +160,24 @@ class Client implements ClientInterface
           $limitPage = 48;
         }
         $path = '';
+        $anonymous="true";
+        if ($this->_sessionStorage)  {
+        if ($this->_sessionStorage->isLoggedIn()) {
+            if ($this->_sessionStorage->getCustomerId()!==''){
+              $anonymous="false";
+            };
+          }
+        }
         $params = array_merge(
             array(
                 'q' => $query,
-                'cq' => '@store_id=="'.$this->_storeCode.'"',
+                'cq' => '@store_id=="'.$storeId.'"',
                 'enableDidYouMean' => ($typoCorrection ? 'true' : 'false'),
                 //WIM: Do we need to ignore this?
                 //'firstResult' => $page,
+                'anonymous'=> $anonymous,
                 'locale' => '"'.$this->_language.'"',
-                'context' => '{"store_id":'.$this->_storeCode.',"website":"'.$this->_language.'"}',
+                'context' => '{"context_store_id":"'.$this->_storeCode.'","context_website":"'.$this->_language.'"}',
                 'numberOfResults' => $limit,
                 'pipeline' => $this->_pipeline,
                 'searchHub' => $hub,
@@ -196,12 +205,13 @@ class Client implements ClientInterface
             //We got search results now, we now need to sent the /searches Analytics event
             if ($tracking!=null) {
               $actionCause="searchFromLink";
+              $actionType="interface";
               //If from Query suggest
               if ($fromQS!=null) {
                 $actionCause="omniboxFromLink";
-
+                $actionType="omnibox";
               }
-              $actionType="interface";
+              
             if ($this->_useRecommendations) {
               $actionCause="recommendationInterfaceLoad";
               $actionType="recommendation";
@@ -213,6 +223,7 @@ class Client implements ClientInterface
         if (!$redirect) {
               $trackResponse=$tracking->executeTrackingSearchRequest([
                 "actionCause"=> $actionCause,
+                "qs" => $qs,
                 "actionType"=> $actionType,
                 "originLevel1"=> $hub,
                 "originLevel2"=> $tab,

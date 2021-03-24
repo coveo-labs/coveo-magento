@@ -33,7 +33,7 @@ interface ClientInterface
      * @return SearchResult
      * @throws Exception
      */
-    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null,$tracking=null, $limitPage=null, $fromQS=null);
+    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null,$tracking=null, $limitPage=null, $fromQS=null, $qs=null, $storeId=null);
 
     /**
      * Send data to index

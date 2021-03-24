@@ -87,6 +87,7 @@ class Search implements SearchInterface
     private $cookie;
 
     private $fromQuerySuggest;
+    private $qs;
 
     /**
      * Search constructor.
@@ -123,6 +124,7 @@ class Search implements SearchInterface
         $this->clientBuilder = $clientBuilder;
         $this->resultFactory = $resultFactory;
         $this->fromQuerySuggest = false;
+        $this->qs = [];
     }
 
     public function getTracking(){
@@ -133,8 +135,9 @@ class Search implements SearchInterface
       return $this->searchConfig;
     }
 
-    public function setFromQS(){
+    public function setFromQS($suggestions){
       $this->fromQuerySuggest = true;
+      $this->qs = $suggestions;
     }
 
     /**
@@ -209,7 +212,9 @@ class Search implements SearchInterface
                 $tab,
                 $this->tracking,
                 $limitPage,
-                $this->fromQuerySuggest
+                $this->fromQuerySuggest,
+                $this->qs,
+                $this->config->getStoreId()
             );
             
             $this->logger->debug('[search] Search executed');
@@ -375,7 +380,7 @@ class Search implements SearchInterface
             ->withApiBaseUrl($this->config->getApiSearchUrl())
             ->withSessionStorage($this->tracking->getSession())
             ->withLanguage($this->config->getLanguage())
-            ->withStoreCode($this->config->getStoreId())
+            ->withStoreCode($this->config->getStoreCode())
             ->withAgent($this->tracking->getApiAgent())
             ->withLogger($this->logger)
             ->build();
