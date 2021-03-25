@@ -3,11 +3,11 @@ namespace Coveo\Search\Model\Service\Indexer;
 
 
 define('__ROOT__', dirname(dirname(__FILE__)));
-require_once(__ROOT__.'\..\..\SDK\SDKPushPHP\Enum.php');
-require_once(__ROOT__.'\..\..\SDK\SDKPushPHP\CoveoConstants.php');
-require_once(__ROOT__.'\..\..\SDK\SDKPushPHP\CoveoDocument.php');
-require_once(__ROOT__.'\..\..\SDK\SDKPushPHP\CoveoPermissions.php');
-require_once(__ROOT__.'\..\..\SDK\SDKPushPHP\CoveoPush.php');
+require_once(__ROOT__. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'SDK'. DIRECTORY_SEPARATOR .'SDKPushPHP'. DIRECTORY_SEPARATOR .'Enum.php');
+require_once(__ROOT__. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'SDK'. DIRECTORY_SEPARATOR .'SDKPushPHP'. DIRECTORY_SEPARATOR .'CoveoConstants.php');
+require_once(__ROOT__. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'SDK'. DIRECTORY_SEPARATOR .'SDKPushPHP'. DIRECTORY_SEPARATOR .'CoveoDocument.php');
+require_once(__ROOT__. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'SDK'. DIRECTORY_SEPARATOR .'SDKPushPHP'. DIRECTORY_SEPARATOR .'CoveoPermissions.php');
+require_once(__ROOT__. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR .'SDK'. DIRECTORY_SEPARATOR .'SDKPushPHP'. DIRECTORY_SEPARATOR .'CoveoPush.php');
 
 use Coveo\Search\Api\Service\Config\IndexerConfigInterface;
 use Coveo\Search\Api\Service\ConfigInterface;
