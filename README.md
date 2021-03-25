@@ -66,7 +66,7 @@ Copy the created Push API Key in your configuration.
 Goto: [Create Fields](https://docs.coveo.com/en/1982).
 
 Create the following fields:
-|---|----|---|
+
 | Field name | Type | Settings |
 |---|----|---|
 |sku| String | |
