@@ -12,8 +12,8 @@ use Magento\Catalog\Model\Layer\Filter\Dynamic\AlgorithmFactory;
 use Magento\Catalog\Model\Product\OptionFactory;
 use Magento\Catalog\Model\ResourceModel\Helper;
 use Magento\Catalog\Model\ResourceModel\Url;
-//use Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\DefaultFilterStrategyApplyChecker;
-//use Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\DefaultFilterStrategyApplyCheckerInterface;
+use Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\DefaultFilterStrategyApplyChecker;
+use Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\DefaultFilterStrategyApplyCheckerInterface;
 use Magento\CatalogSearch\Model\Search\RequestGenerator;
 use Magento\Config\Model\Config\Backend\Admin\Custom;
 use Magento\Customer\Api\GroupManagementInterface;
@@ -151,7 +151,7 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
         ConfigInterface $config,
         SearchResultFactory $searchResultFactory,
         AdapterInterface $connection = null,
-        //DefaultFilterStrategyApplyChecker $defaultFilterStrategyApplyChecker = null,
+        DefaultFilterStrategyApplyChecker $defaultFilterStrategyApplyChecker = null,
         $searchRequestName = 'catalog_view_container'
     ) {
         parent::__construct(
@@ -180,8 +180,8 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
         $this->temporaryStorageFactory           = $tempStorageFactory;
         $this->searchRequestName                 = $searchRequestName;
         $this->request                           = $request;
-        /*$this->defaultFilterStrategyApplyChecker = $defaultFilterStrategyApplyChecker ?: ObjectManager::getInstance()
-            ->get(DefaultFilterStrategyApplyChecker::class);*/
+        $this->defaultFilterStrategyApplyChecker = $defaultFilterStrategyApplyChecker ?: ObjectManager::getInstance()
+            ->get(DefaultFilterStrategyApplyChecker::class);
         $this->config = $config;
         $this->searchResultFactory = $searchResultFactory;
     }
