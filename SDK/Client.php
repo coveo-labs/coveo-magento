@@ -186,6 +186,10 @@ class Client implements ClientInterface
             ),
             (array)$extraParams
         );
+        //Check if we need to add padding to the ML parameters
+        if ($this->_useRecommendations) {
+          $params['mlParameters'] = '{"padding": "trending"}';
+        }
         $this->_logger->debug('CLIENT PARAMS: '.json_encode($params));
         if($enriched){
             $params['debug'] = 'true';

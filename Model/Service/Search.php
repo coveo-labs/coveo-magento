@@ -292,7 +292,9 @@ class Search implements SearchInterface
                         $skus = $this->result->getResults();
                         break;
                     }*/
-                    $skus[] = $product->raw->sku;
+                    if (isset($product->raw->sku)){
+                      $skus[] = $product->raw->sku;
+                    }
                 }
             } else {
               $this->logger->debug('[search] Searching products from result, NOT enriched..');
@@ -302,7 +304,9 @@ class Search implements SearchInterface
                       $skus = $this->result->getResults();
                       break;
                   }*/
-                  $skus[] = $product->raw->sku;
+                  if (isset($product->raw->sku)){
+                    $skus[] = $product->raw->sku;
+                  }
               }
             }
 
