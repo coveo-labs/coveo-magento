@@ -168,6 +168,10 @@ class Client implements ClientInterface
             };
           }
         }
+        $additionalContext = '';
+        if ($this->_useRecommendations) {
+           $additionalContext = ',"sku":"'.$query.'"';
+        }
         $params = array_merge(
             array(
                 'q' => $query,
@@ -177,7 +181,7 @@ class Client implements ClientInterface
                 //'firstResult' => $page,
                 'anonymous'=> $anonymous,
                 'locale' => '"'.$this->_language.'"',
-                'context' => '{"context_store_id":"'.$this->_storeCode.'","context_website":"'.$this->_language.'"}',
+                'context' => '{"context_store_id":"'.$this->_storeCode.'","context_website":"'.$this->_language.'"'.$additionalContext.'}',
                 'numberOfResults' => $limit,
                 'pipeline' => $this->_pipeline,
                 'searchHub' => $hub,
@@ -188,7 +192,9 @@ class Client implements ClientInterface
         );
         //Check if we need to add padding to the ML parameters
         if ($this->_useRecommendations) {
-          $params['mlParameters'] = '{"padding": "trending"}';
+          unset($params['q']);
+          $params['mlParameters'] = '{"padding": "trending", "itemIds":["'.$query.'"]}';
+          $params['recommendation'] = $hub;
         }
         $this->_logger->debug('CLIENT PARAMS: '.json_encode($params));
         if($enriched){
