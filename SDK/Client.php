@@ -194,7 +194,8 @@ class Client implements ClientInterface
         if ($this->_useRecommendations) {
           unset($params['q']);
           $params['mlParameters'] = '{"padding": "trending", "itemIds":["'.$query.'"]}';
-          $params['recommendation'] = $hub;
+          $params['recommendation'] = 'recommendations';
+          $params['searchHub'] = $hub.' recommendations';
         }
         $this->_logger->debug('CLIENT PARAMS: '.json_encode($params));
         if($enriched){
