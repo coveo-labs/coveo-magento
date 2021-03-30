@@ -169,8 +169,10 @@ class DataSender implements DataSenderInterface
             foreach ($catalogData as $dataentry) {
               $mydoc = new Document($dataentry['documentId'],$this->logger);
               $mydoc->AddMetadata('foldingcollection',$dataentry['sku']);
+              $mydoc->AddMetadata('foldingcollection',$dataentry['sku']);
               $mydoc->AddMetadata('foldingparent',$dataentry['sku']);
-              $mydoc->AddMetadata('foldingchild',$dataentry['sku']);
+              //$mydoc->AddMetadata('permanentid',$dataentry['sku']);
+              $mydoc->permanentid = $dataentry['sku'];
               $alltext = '';
               foreach ($dataentry as $key => $value){
                 //encode the $value
@@ -201,9 +203,11 @@ class DataSender implements DataSenderInterface
                      $mydocv->AddMetadata('foldingcollection',$dataentry['sku']);
                      $mydocv->AddMetadata('foldingparent',$dataentry['sku']);
                      $mydocv->AddMetadata('foldingchild',$variant['sku']);
+                     $mydocv->permanentid = $variant['sku'];
                        } else {
                      //Treat as a product
                      $mydocv->AddMetadata('objecttype','Product');
+                     $mydocv->permanentid = $variant['sku'];
                      //Take the metadata from the Product
                      foreach ($dataentry as $key => $value){
                       //encode the $value
