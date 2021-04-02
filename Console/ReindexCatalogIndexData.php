@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Coveo\Search\Console;
 
-use Coveo\Search\Model\Service\Indexer\Catalog;
+use Coveo\Search\Api\Service\Indexer\CatalogInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ReindexCatalogIndexData extends Command
 {
     /**
-     * @var Catalog
+     * @var CatalogInterface
      */
     protected $catalog;
 
@@ -20,7 +20,7 @@ class ReindexCatalogIndexData extends Command
      * @param DataSenderInterface $dataSender
      */
     public function __construct(
-        Catalog $catalog
+        CatalogInterface $catalog
     ) {
         $this->catalog = $catalog;
         parent::__construct();
