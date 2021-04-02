@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
-    <indexer id="coveo_catalog" view_id="coveo_catalog_flat" class="Coveo\Search\Model\Indexer\Catalog">
-        <title translate="true">Coveo Catalog</title>
-        <description translate="true">Catalog syncronization with Coveo service</description>
-        <dependencies>
-            <indexer id="catalog_category_product" />
-            <indexer id="catalog_product_category" />
-            <indexer id="catalog_product_price" />
-            <indexer id="catalog_product_attribute" />
-            <indexer id="cataloginventory_stock" />
-        </dependencies>
-    </indexer>
+<!--    <indexer id="coveo_catalog" view_id="coveo_catalog_flat" class="Coveo\Search\Model\Indexer\Catalog">-->
+<!--        <title translate="true">Coveo Catalog</title>-->
+<!--        <description translate="true">Catalog syncronization with Coveo service</description>-->
+<!--        <dependencies>-->
+<!--            <indexer id="catalog_category_product" />-->
+<!--            <indexer id="catalog_product_category" />-->
+<!--            <indexer id="catalog_product_price" />-->
+<!--            <indexer id="catalog_product_attribute" />-->
+<!--            <indexer id="cataloginventory_stock" />-->
+<!--        </dependencies>-->
+<!--    </indexer>-->
    <!-- <indexer id="coveo_attributes_values" view_id="coveo_attributes_values_flat" class="Coveo\Search\Model\Indexer\AttributesValues">
         <title translate="true">Coveo Attributes Values</title>
         <description translate="true">Attributes values syncronization with Coveo service</description>
