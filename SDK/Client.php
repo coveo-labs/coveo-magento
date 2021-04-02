@@ -177,8 +177,8 @@ class Client implements ClientInterface
                 'q' => $query,
                 'cq' => '@store_id=="'.$storeId.'"',
                 'enableDidYouMean' => ($typoCorrection ? 'true' : 'false'),
-                //WIM: Do we need to ignore this?
-                //'firstResult' => $page,
+                'enableMLDidYouMean'=> 'false',//($typoCorrection ? 'true' : 'false'),
+                'enableFallbackSearchOnEmptyQueryResults' => 'true',
                 'anonymous'=> $anonymous,
                 'locale' => '"'.$this->_language.'"',
                 'context' => '{"context_store_id":"'.$this->_storeCode.'","context_website":"'.$this->_language.'"'.$additionalContext.'}',
@@ -198,6 +198,7 @@ class Client implements ClientInterface
           $params['searchHub'] = $hub.' recommendations';
         }
         $this->_logger->debug('CLIENT PARAMS: '.json_encode($params));
+        //$params['debug'] = 'true';
         if($enriched){
             $params['debug'] = 'true';
         }

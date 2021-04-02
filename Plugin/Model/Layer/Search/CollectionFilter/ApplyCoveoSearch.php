@@ -112,7 +112,7 @@ class ApplyCoveoSearch extends \Magento\CatalogSearch\Model\Layer\Search\Plugin\
 
         /** @var string $queryText */
         $queryText = $query->getQueryText();
-
+        $this->logger->debug('[search plugin] queryText='.$queryText.'..');
         $this->logger->debug('[search plugin] Executing search..');
 
         // Do search
@@ -140,7 +140,8 @@ class ApplyCoveoSearch extends \Magento\CatalogSearch\Model\Layer\Search\Plugin\
                 }
 
                 // Automatic typo correction
-                if ($searchResult->getFixedSearchString() !== null && $queryText === $searchResult->getOriginalSearchString()) {
+                $this->logger->debug('[search plugin] GetFixedSearchString '.$searchResult->getFixedSearchString());
+                if ($searchResult->getFixedSearchString() !== '' && $queryText === $searchResult->getOriginalSearchString()) {
                     $this->logger->debug('[search plugin] Query text is typo corrected, adding frontend message');
                     $message = __(
                         'Search instead for "<a href="%1">%2</a>"',
@@ -157,6 +158,7 @@ class ApplyCoveoSearch extends \Magento\CatalogSearch\Model\Layer\Search\Plugin\
                     if ($this->search->isFallbackEnable()) {
                         if ($searchResult->getFixedSearchString() && $queryText === $searchResult->getOriginalSearchString()) {
                             $queryText = $searchResult->getFixedSearchString();
+                            $this->logger->debug('[search plugin] queryText2='.$queryText.'..');
                         }
                         $collection->addSearchFilter($queryText);
                         $this->logger->debug('[search plugin] Executing Magento search fallback');
@@ -173,7 +175,7 @@ class ApplyCoveoSearch extends \Magento\CatalogSearch\Model\Layer\Search\Plugin\
                 }, $this->search->getProducts());
 
                 if (sizeof($products) === 0) {
-                    $this->logger->error('[search plugin] No product found with SKU response, check products with SKUs: '.implode(',', $searchResult->getResults()));
+                    $this->logger->error('[search plugin] No product found with SKU response, check products with SKUs');//: '.implode(',', $searchResult->getResults()));
                     if ($this->search->isFallbackEnable()) {
                         $collection->addSearchFilter($queryText);
                         $this->logger->debug('[search plugin] Executing Magento search fallback');

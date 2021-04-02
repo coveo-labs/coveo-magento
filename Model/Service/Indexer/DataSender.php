@@ -165,6 +165,7 @@ class DataSender implements DataSenderInterface
             $useVariantsAsProducts = False;
             $useVariantsAsProducts = $this->config->getUseVariantAsProduct();
             //Start the push
+            $first=0;
             $push->Start($updateSourceStatus, $deleteOlder);
             foreach ($catalogData as $dataentry) {
               $mydoc = new Document($dataentry['documentId'],$this->logger);
@@ -189,8 +190,12 @@ class DataSender implements DataSenderInterface
                 $content = "<meta charset='UTF-16'><meta http-equiv='Content-Type' content='text/html; charset=UTF-16'><html><head></head><body>".$alltext."</body></html>";
                 $mydoc->SetContentAndZLibCompress($content);
                 $push->Add($mydoc);
+                if ($first<=3) {
+                  //Output to debug
+                  $this->logger->debug("[MetadataExamplePush] ".json_encode($mydoc->cleanUp()));
+                }
               }
-
+              
               //Check if we need to add variants
               if (array_key_exists('variants',$dataentry) && $dataentry['variants']!=null) {
                 foreach($dataentry['variants'] as $variant){
@@ -235,10 +240,15 @@ class DataSender implements DataSenderInterface
                   $content = "<meta charset='UTF-16'><meta http-equiv='Content-Type' content='text/html; charset=UTF-16'><html><head></head><body>".$alltext."</body></html>";
                   $mydocv->SetContentAndZLibCompress($content);
                   $push->Add($mydocv);
-    
+                  if ($first<=3) {
+                    //Output to debug
+                    $this->logger->debug("[MetadataExamplePush] ".json_encode($mydoc->cleanUp()));
+                  }
+      
                 }
 
               }
+              $first=$first+1;
           
             }
 
