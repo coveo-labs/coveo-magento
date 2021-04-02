@@ -73,6 +73,8 @@ Create the following fields:
 |store_id| String | |
 |price | Decimal | |
 
+** When you start building your index, look in the `Coveo.log` file for `MetadataExamplePush`. Here you will see all the fields which are pushed towards the Coveo index. With `Field Mappings` you can map those fields to specific Coveo fields. **
+
 
 ### Set your configuration: 
 1. Under __API Configuration__

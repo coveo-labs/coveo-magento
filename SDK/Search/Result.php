@@ -44,7 +44,7 @@ class Result extends Response
     public function getTotalTime()
     {
         if($this->isValid()){
-            return $this->_response->requestDuration;
+            return $this->_response->duration;
         }else{
             return self::FALLBACK_RESPONSE_TOTAL_TIME;
         }
@@ -75,8 +75,10 @@ class Result extends Response
 
     public function getFixedSearchString()
     {
-        if($this->isValid()){
-            return implode(', ',$this->_response->queryCorrections);
+      //This is new: "changedQuery" : {    "originalQuery" : "bagks",    "correctedQuery" : "bags"  },
+        if($this->isValid() && isset($this->_response->changedQuery)){//} && sizeof($this->_response->queryCorrections)>0){
+          //"queryCorrections" : [ {  "correctedQuery" : "bags",
+            return $this->_response->changedQuery->correctedQuery;
         }else{
             return self::FALLBACK_RESPONSE_FIXED_SEARCH_STRING;
         }

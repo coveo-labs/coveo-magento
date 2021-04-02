@@ -42,7 +42,7 @@ class Result
     {
         $searchResult = $this->search->getResult();
         $searchQuery = $this->catalogSearchData->getEscapedQueryText();
-        if ($searchResult !== null && $searchResult->isValid() && $searchResult->getFixedSearchString() !== null) {
+        if ($searchResult !== null && $searchResult->isValid() && $searchResult->getFixedSearchString() !== '') {
             $searchQuery = $searchResult->getFixedSearchString();
         }
         return __(self::SEARCH_RESULT_MSG, $searchQuery);

@@ -1,0 +1,10 @@
+<config>
+    <group id="CoveoIndexerCron">
+        <job name="CoveoIndexerBuildCatalog" instance="Coveo\Search\Console\SendCatalogIndexData" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+        <job name="CoveoIndexerSendCatalog" instance="Coveo\Search\Console\ReindexCatalogIndexData" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+    </group>
+</config>
