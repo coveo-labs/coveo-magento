@@ -25,6 +25,7 @@
             <argument name="commands" xsi:type="array">
                 <item name="CoveoGenerateDummyData" xsi:type="object">Coveo\Search\Console\GenerateDummyData</item>
                 <item name="CoveoSendCatalogIndexData" xsi:type="object">Coveo\Search\Console\SendCatalogIndexData</item>
+                <item name="CoveoReindexCatalogIndexData" xsi:type="object">Coveo\Search\Console\ReindexCatalogIndexData</item>
             </argument>
         </arguments>
     </type>
@@ -32,7 +33,7 @@
     <type name="Magento\CatalogSearch\Block\Result">
         <plugin name="overrideQueryCoveo" type="Coveo\Search\Plugin\Block\Result" />
     </type>
-    
+
     <preference for="Coveo\Search\Api\Service\Config\SearchConfigInterface"
                 type="Coveo\Search\Model\Service\Config\SearchConfig" />
 
@@ -108,6 +109,6 @@
     </type>
 
     <preference for="Magento\CatalogSearch\Model\ResourceModel\Fulltext\SearchCollection" type="Coveo\Search\Model\ResourceModel\Fulltext\Collection"/>
-    
+
 
   </config>
