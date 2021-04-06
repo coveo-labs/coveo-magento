@@ -248,7 +248,7 @@ class Tracking implements TrackingInterface
             'brand' => $product->getManufacturer(),
             'price' => $product->getFinalPrice(),
             'quantity' => $quantity,
-            'position' => $position,
+            'position' => ($position),
         ];
 
         $categoryIds = $product->getCategoryIds();

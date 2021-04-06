@@ -148,7 +148,7 @@ class ClickAfterSearch extends \Magento\Framework\View\Element\Template implemen
         }
 
         $data = [];
-        $index = 0;
+        $index = 1;
         $currentPage = $productCollection->getCurPage();
         $pageSize = $productCollection->getPageSize();
         foreach ($productCollection as $product) {

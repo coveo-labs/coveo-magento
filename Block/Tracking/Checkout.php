@@ -107,7 +107,7 @@ class Checkout extends \Magento\Framework\View\Element\Template implements Scrip
         return array_map(function($item, $index) {
             return $this->tracking->getProductTrackingParams(
                 $this->orderedProducts[$item->getProductId()],
-                $index,
+                $index+1,
                 round($item->getQtyOrdered())
             );
         }, $items, array_keys(array_values($items)));
