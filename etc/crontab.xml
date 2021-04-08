@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0"?> 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
-     <group id="CoveoIndexerCron">
-        <job name="CoveoIndexerBuildCatalog" instance="Coveo\Search\Cron\ReindexAndSendCatalogData" method="execute">
+     <group id="default">
+        <job name="coveo_reindex" instance="Coveo\Search\Cron\ReindexAndSendCatalogData" method="execute">
             <schedule>30 0 * * *</schedule>
         </job>
     </group>
