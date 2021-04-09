@@ -34,6 +34,6 @@ class ReindexAndSendCatalogData
     public function execute()
     {
         $this->catalog->execute();
-        $this->dataSender->execute();
+        $this->dataSender->sendCatalog();
     }
 }
