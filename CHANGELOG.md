@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2021-04-12
+### Added
+- Fixed cron job
+- Fixed X-HTTP Fowards
+- Fixed UserIp in all calls
+- Fixed Analytics in all calls
+- Fixed AddtoCartQuantity
+- Fixed pr1ca, with full category
+- Fixed Analytics request from main and search pages (different events)
+- Fixed ClientId=VisitorId
+
 
 ## [1.9.99] - 2021-04-08
 ### Added

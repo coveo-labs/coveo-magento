@@ -144,7 +144,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null, $tracking=null, $limitPage=null, $fromQS=null, $qs=null, $storeId=null)
+    public function search($query, $typoCorrection = true, $extraParams = array(), $enriched = false, $page = null, $limit = null, $hub=null, $tab=null, $tracking=null, $limitPage=null, $fromQS=null, $qs=null, $storeId=null, $onMain=null)
     {
         if(self::FORCE_ERROR){
             $query = null;
@@ -152,6 +152,9 @@ class Client implements ClientInterface
 
         if($page === null){
             $page = 0;
+        }
+        if($onMain === null){
+          $onMain = false;
         }
         if($limit === null || $limit===0 || $limit==="0"){
             $limit = 250;
@@ -204,6 +207,10 @@ class Client implements ClientInterface
         }
 
         try {
+            //Get userip
+            if ($tracking!=null) {
+              $params['userIp']=$tracking->getRemoteAddr();
+            }
             $response = $this->doRequest($path, self::HTTP_METHOD_GET, $params);
             $result = new SearchResult($response);
             $result->setQuery($query);
@@ -218,9 +225,17 @@ class Client implements ClientInterface
             if ($tracking!=null) {
               $actionCause="searchFromLink";
               $actionType="interface";
+              //If on Main page
+              if ($onMain==true) {
+                $actionCause="searchboxsubmit";
+                $actionType="search box";
+              }
               //If from Query suggest
               if ($fromQS!=null) {
                 $actionCause="omniboxFromLink";
+                if ($onMain==true) {
+                  $actionCause="omniboxAnalytics";
+                }
                 $actionType="omnibox";
               }
               
@@ -449,6 +464,7 @@ class Client implements ClientInterface
 
         if ($httpMethod == self::HTTP_METHOD_POST) {
             curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array("X_FORWARDED_FOR: ".$params['userIp']));
             if ($withoutArray==true) {
               $payload = json_encode($params );  
             } else {
@@ -463,6 +479,7 @@ class Client implements ClientInterface
             'accept: application/json'));
             
         } else {
+          curl_setopt($ch, CURLOPT_HTTPHEADER, array("X_FORWARDED_FOR: ".$params['userIp']));
           curl_setopt($ch, CURLOPT_HTTPHEADER, [
             self::TRACKING_AGENT_HEADER.': '.$this->_agent,
             $authorization,

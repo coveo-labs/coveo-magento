@@ -63,6 +63,8 @@ class TrackAddToCart implements ObserverInterface
         /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
         $product = $observer->getProduct();
         $productData = $this->tracking->getProductTrackingParams($product, 1, round($product->getCartQty()));
+        $this->logger->info('[cart tracking update] Final Price Item   : '.$product->getFinalPrice());
+        $this->logger->info('[cart tracking update] Final Price Product: '.$productData['price']);
 
         $this->logger->info('[cart tracking add] Product "'. $productData['name'] .'" added to cart with qty ' . $productData['quantity']);
 

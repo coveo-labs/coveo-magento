@@ -126,5 +126,11 @@ interface TrackingInterface
      */
     public function executeTrackingRequest($params);
     public function executeTrackingSearchRequest($params);
-    
+
+    /**
+     * Get currency code
+     *
+     * @return string
+     */
+    public function getUuid();
 }

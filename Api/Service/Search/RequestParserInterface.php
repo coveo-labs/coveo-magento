@@ -80,4 +80,5 @@ interface RequestParserInterface
      * @return bool
      */
     public function areFiltersHandled();
+    public function getFullActionName();
 }

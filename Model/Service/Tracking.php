@@ -253,13 +253,22 @@ class Tracking implements TrackingInterface
 
         $categoryIds = $product->getCategoryIds();
         if ($categoryIds !== null && count($categoryIds) > 0) {
-            if (!isset($this->categories[$categoryIds[0]])) {
+            /*if (!isset($this->categories[$categoryIds[0]])) {
                 $this->loadCategory($categoryIds[0]);
-            }
-            $trackingProductParams['category'] = $this->categories[$categoryIds[0]]->getName();
+            }*/
+            $pathSize  = count($categoryIds);
+            //$this->logger->info('[getProductTrackingParams] No of Categories : '.$pathSize);
+            $path = array();
+                for ($i = 1; $i < $pathSize; $i++) {
+                    $path[] = $this->loadCategory($categoryIds[$i])->getName();
+                }
+                
+            $trackingProductParams['category'] = implode('/', $path);//$this->categories[$categoryIds[0]]->getName();
         } else {
             $trackingProductParams['category'] = null;
         }
+        //$this->logger->info('[getProductTrackingParams] Final Price Item : '.$product->getFinalPrice());
+        //$this->logger->info('[getProductTrackingParams] Category         : '.$trackingProductParams['category']);
 
         return $trackingProductParams;
     }
@@ -272,8 +281,8 @@ class Tracking implements TrackingInterface
         $categoriesCollection = $this->categoryCollectionFactory->create()
             ->addAttributeToSelect('name')
             ->addFieldToFilter('entity_id', $id);
-        $category = $categoriesCollection->getFirstItem();
-        $this->categories[$category->getId()] = $category;
+        return $category = $categoriesCollection->getFirstItem();
+        //$this->categories[$category->getId()] = $category;
     }
 
     /**
@@ -366,9 +375,17 @@ class Tracking implements TrackingInterface
     {
       
         $profilingParams = $this->getProfilingParams();
-        
+        $myana=["userIp"=> $this->getRemoteAddr(),
+          "userAgent"=>$this->getUserAgent(),
+          'pageId'=>$this->getUuid(),
+          'clientId'=>$this->session->getVisitorId(),
+          'documentLocation'=>$this->getLastPage(),
+          'documentReferrer'=>$this->getCurrentPage()
+      ];
         $params = array_merge([
             'z' => $this->getUuid(),
+            "userIp"=> $this->getRemoteAddr(),
+            'analytics' => $myana,
             /*'tid' => $this->analyticsConfig->getKey(),*/
             'cid' => $this->session->getVisitorId(),
             'pid' => $this->getUuid(),
@@ -412,10 +429,19 @@ class Tracking implements TrackingInterface
            $custom['suggestions']=str_replace(',',';',$params['qs']);
         }
         unset($params['qs']);
+        $myana=["userIp"=> $this->getRemoteAddr(),
+          "userAgent"=>$this->getUserAgent(),
+          'pageId'=>$this->getUuid(),
+          'clientId'=>$this->session->getVisitorId(),
+          'documentLocation'=>$this->getLastPage(),
+          'documentReferrer'=>$this->getCurrentPage()
+      ];
         $profilingParams = ['uip' => $this->getRemoteAddr(),
+        "userIp"=> $this->getRemoteAddr(),
         'userAgent' => $this->getUserAgent(),
         'clientId' => $this->session->getVisitorId(),
         'originLevel3' => $this->getLastPage(),
+        'analytics' => $myana,
         'mobile' => false,
         'language' => $this->config->getLanguage(),
         "actionCause"=> "searchFromLink",
@@ -439,7 +465,7 @@ class Tracking implements TrackingInterface
         ], $profilingParams, $params);
         $extraParams = array('org='.$this->config->getApiOrg(),'visitor='.$this->session->getVisitorId());
         //$this->logger->debug(json_encode($params));
-        //$this->logger->debug(json_encode($extraParams));
+        $this->logger->debug(json_encode($extraParams));
         $client = $this->getClient();
         $returnValue = '';
         try {
@@ -460,7 +486,7 @@ class Tracking implements TrackingInterface
      *
      * @return string
      */
-    protected function getUuid()
+    public function getUuid()
     {
         return $this->clientBuilder->build()->getUuid();
     }

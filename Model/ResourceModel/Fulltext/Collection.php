@@ -488,8 +488,12 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
         }
 
         $searchCriteria = $this->searchCriteriaBuilder->create();
+        //$this->getSearch()->setOnMain(false);
+        //$this->_logger->debug('ActionName:'.$this->request->getFullActionName());
         if ($this->request->getFullActionName() === 'catalogsearch_result_index') {
             $this->searchRequestName = 'quick_search_container';
+            //$this->getSearch()->setOnMain(true);
+            //$this->_logger->debug('Collection.php setting OnMain to false');
         }
         $searchCriteria->setRequestName($this->searchRequestName);
         $searchCriteria->setSortOrders($this->searchOrders);
@@ -498,10 +502,11 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
         try {
             if ($this->shouldLoadEmptySearchResult()) {
                 // Simply load an empty search result
+                $this->_logger->debug('Collection.php load empty');
                 $this->searchResult = $this->searchResultFactory->create()->setItems([]);
             } else {
-                $this->searchResult = $this->getSearch()->search($searchCriteria);
-                $this->_logger->debug('Collection.php executing Search');
+              $this->_logger->debug('Collection.php executing Search');
+              $this->searchResult = $this->getSearch()->search($searchCriteria);
             }
         } catch (Exception $e) {
             throw new LocalizedException(__('Sorry, something went wrong. You can find out more in the error log.'));

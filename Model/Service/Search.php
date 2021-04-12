@@ -88,6 +88,7 @@ class Search implements SearchInterface
 
     private $fromQuerySuggest;
     private $qs;
+    private $onMain;
 
     /**
      * Search constructor.
@@ -125,6 +126,7 @@ class Search implements SearchInterface
         $this->resultFactory = $resultFactory;
         $this->fromQuerySuggest = false;
         $this->qs = [];
+        $this->onMain = false;
     }
 
     public function getTracking(){
@@ -138,6 +140,10 @@ class Search implements SearchInterface
     public function setFromQS($suggestions){
       $this->fromQuerySuggest = true;
       $this->qs = $suggestions;
+    }
+
+    public function setOnMain($val){
+      $this->onMain = $val;
     }
 
     /**
@@ -154,6 +160,15 @@ class Search implements SearchInterface
 
         if ($queryText === null) {
             $queryText = $this->requestParser->getQueryText();
+        }
+
+        //Check if we are on the main result page
+        $onMain = false;
+        if ($this->tracking!=null) {
+          if (str_contains($this->tracking->getLastPage(),'q=')){
+            $onMain=true;
+            $this->setOnMain(true);
+          }
         }
 
         $this->logger->debug("[search] Searching for '$queryText'..");
@@ -193,6 +208,7 @@ class Search implements SearchInterface
             $tab = $this->searchConfig->getTab();
             $limitPage = $this->requestParser->getLimit();
             $pagenr = $this->requestParser->getPage();
+            $params['referrer']=$params['dr'];
 
             $this->logger->debug('[search] Executing search..');
             //$this->logger->debug('[search] Executing search.. visitor: '.$this->cookie->getCookie(self::COOKIE_VISITORID));
@@ -214,7 +230,8 @@ class Search implements SearchInterface
                 $limitPage,
                 $this->fromQuerySuggest,
                 $this->qs,
-                $this->config->getStoreId()
+                $this->config->getStoreId(),
+                $this->onMain
             );
             
             $this->logger->debug('[search] Search executed');

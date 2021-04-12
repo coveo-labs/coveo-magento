@@ -63,6 +63,8 @@ class TrackCartUpdateQty implements ObserverInterface
         $info = $observer->getInfo()->getData();
 
         foreach ($items as $item) {
+
+            $product = $item->getProduct();
             $qtyFrom = $item->getQty();
             if (!isset($info[$item->getId()]) || !isset($info[$item->getId()]['qty'])) {
                 $this->logger->warn('[cart tracking update] Invalid observer data: '.$item->getId().' not found in infos, tracking skipped', [
@@ -85,8 +87,9 @@ class TrackCartUpdateQty implements ObserverInterface
                 continue;
             }
 
-            $productData = $this->tracking->getProductTrackingParams($item, 1, abs($qtyDiff));
-
+            $productData = $this->tracking->getProductTrackingParams($product, 1, abs($qtyDiff));
+            $this->logger->info('[cart tracking update] Final Price Item   : '.$product->getFinalPrice());
+            $this->logger->info('[cart tracking update] Final Price Product: '.$productData['price']);
             $this->logger->info('[cart tracking update] Elaborated event '. $event .' for product "' . $productData['name'] . '" with qty ' . $productData['quantity']);
 
             $this->tracking->executeTrackingRequest([

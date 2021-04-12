@@ -10,6 +10,7 @@ require([
         "jquery"
     ], function(jQuery){
         window.jQuery = jQuery;
+        var requestId='';
         jQuery.fn.ts = function(options) { // eslint-disable-line func-names, no-param-reassign
     return this.each(() => {
       const el = jQuery(this);
@@ -18,6 +19,14 @@ require([
       const tid = get(options, 'apiKey', el, 'ts-api-key');
       const endp = get(options, 'endPoint', el, 'ts-api-key');
       const ul = get(options, 'language', el, 'ts-language', 'it_it');
+      const visitorid = get(options, 'visitorId', el, 'ts-visitorId');
+      const searchhub = get(options, 'searchHub', el, 'ts-searchHub', 'it_it');
+      const clientid = get(options, 'clientId', el, 'ts-searchHub', 'it_it');
+      const userip = get(options, "userIp", el, 'ts-userip', 'it_it');
+      const ua = get(options, "userAgent", el, 'ts-ua', 'it_it');
+      const pid = get(options, 'pageId', el, 'ts-pid', 'it_it');
+      const dl = get(options, 'documentLocation', el, 'ts-dl', 'it_it');
+      const dr = get(options, 'documentReferrer', el, 'ts-dr', 'it_it');
       const store = get(options, 'context_store_id', el, 'ts-language', 'it_it');
       const site = get(options, 'context_website', el, 'ts-language', 'it_it');
       const uid = get(options, 'uid', el, 'ts-uid', getFromTa('userId'));
@@ -50,13 +59,24 @@ require([
         onSearchStart: (params) => {
           if (!params.uid) jQuery.extend(params, { uid: getFromTa('userId') });
           if (!params.locale) jQuery.extend(params, { locale: `${ul}`});
-          if (!params.dl) jQuery.extend(params, { dl: getFromTa('location') });
+          if (!params.visitorId) jQuery.extend(params, { visitorId: `${visitorid}`});
+          if (!params.searchHub) jQuery.extend(params, { searchHub: `${searchhub}` });
+          /*if (!params.dl) jQuery.extend(params, { dl: getFromTa('location') });
           if (!params.dr) jQuery.extend(params, { dr: getFromTa('referrer') });
           if (!params.dp) jQuery.extend(params, { dp: getFromTa('page') });
-          if (!params.dt) jQuery.extend(params, { dt: getFromTa('title') });
+          if (!params.dt) jQuery.extend(params, { dt: getFromTa('title') });*/
           //Add Context
           var mycontext = {'context_store_id': `${store}`,
          'context_website': `${site}` };
+         //Add Analytics
+         var myana={"userIp": userip,
+          "userAgent":ua,
+          'pageId':pid,
+          'clientId': clientid,
+          'documentLocation':dl,
+          'documentReferrer':dr
+          };
+          if (!params.analytics) jQuery.extend(params, { analytics: JSON.stringify(myana)});
           if (!params.context) jQuery.extend(params, { context: JSON.stringify(mycontext)});
           if (!params.count) jQuery.extend(params, { count: firstlimit});
           //jQuery.extend(params, { tm: currentMillis });

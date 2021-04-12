@@ -5,6 +5,9 @@ namespace Coveo\Search\Model\Service\Config;
 use Coveo\Search\Api\Service\Config\SuggestionConfigInterface;
 use Coveo\Search\Api\Service\ConfigInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Coveo\Search\Api\Service\Config\AnalyticsConfigInterface;
+use Coveo\Search\Api\Service\SessionInterface;
+use Coveo\Search\Api\Service\TrackingInterface;
 
 class SuggestionConfig implements SuggestionConfigInterface
 {
@@ -32,7 +35,9 @@ class SuggestionConfig implements SuggestionConfigInterface
      * @var ConfigInterface
      */
     protected $config;
-
+    public $session;
+    public $analytics;
+    public $track;
     /**
      * Config constructor.
      *
@@ -41,10 +46,17 @@ class SuggestionConfig implements SuggestionConfigInterface
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        ConfigInterface $config
+        ConfigInterface $config,
+        SessionInterface $session,
+        AnalyticsConfigInterface $analytics,
+        TrackingInterface $track
+
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->config = $config;
+        $this->session = $session;
+        $this->analytics = $analytics;
+        $this->track = $track;
     }
 
     /**
@@ -70,11 +82,16 @@ class SuggestionConfig implements SuggestionConfigInterface
     {
       $custom = [ 'context_store_id'=> $this->config->getStoreCode(),
          'context_website' => $this->config->getLanguage()];
-
-        $data = [
+            $data = [
             'locale' => 'en_us',
-            'visitorId' => '',
-            'searchHub' => '',
+            "userIp"=> $this->track->getRemoteAddr(),
+            "userAgent"=>$this->track->getUserAgent(),
+            'pageId'=>$this->track->getUuid(),
+            'documentLocation'=>$this->track->getLastPage(),
+            'documentReferrer'=>$this->track->getCurrentPage(),
+            'visitorId' => $this->session->getVisitorId(),
+            'searchHub' => $this->analytics->getHub(),
+            'clientId'=>$this->session->getClientId(),
             'context_querysuggest' => '1',
             /*"customData"=> $custom,*/
             'context_store_id'=> $this->config->getStoreCode(),

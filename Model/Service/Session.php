@@ -173,7 +173,8 @@ class Session implements SessionInterface
      */
     public function getClientId()
     {
-        $cid = $this->cookieManager->getCookie(self::COOKIE_USERID);
+      return $this->getVisitorId();
+        /*$cid = $this->cookieManager->getCookie(self::COOKIE_USERID);
         if ($cid === null || $cid === false || $cid === '') {
             $cid = $this->generateClientId();
             $domain = $this->analyticsConfig->getCookieDomain();
@@ -189,7 +190,7 @@ class Session implements SessionInterface
             );
         }
 
-        return substr($cid ?? '', -36);
+        return substr($cid ?? '', -36);*/
     }
 
     /**

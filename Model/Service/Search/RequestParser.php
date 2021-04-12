@@ -201,4 +201,9 @@ class RequestParser implements RequestParserInterface
         //NOTE: currently filters are not supported by Coveo
         return $this->getFilterParam() !== null;
     }
+
+    public function getFullActionName()
+    {
+      return $this->request->getFullActionName();
+    }
 }

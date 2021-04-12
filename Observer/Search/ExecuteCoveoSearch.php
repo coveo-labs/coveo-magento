@@ -86,6 +86,7 @@ class ExecuteCoveoSearch implements ObserverInterface
           $this->search->setFromQS($_REQUEST['Suggest']);
           $this->logger->debug('[catalog search result observer] Executing search from Querysuggest..');
         }
+        
         // Do search
         /** @var Result $result */
         $result = $this->search->execute();
@@ -116,6 +117,7 @@ class ExecuteCoveoSearch implements ObserverInterface
         $tracking->executeTrackingSearchRequest([
           "actionCause"=> "queryPipelineTriggers",
           "actionType"=> "triggers",
+          "eventValue"=> "redirect",
           "originLevel1"=> $hub,
           "originLevel2"=> $tab,
           'queryText' => $result->getOriginalSearchString(),
