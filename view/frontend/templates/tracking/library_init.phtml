@@ -15,7 +15,10 @@ $api = $block->getApi();
   var coveoinit=false;
 
   window.initCoveo=function(callback){
-    if (coveoinit) callback();
+    if (coveoinit) {
+      callback();
+      return;
+    }
     require(['coveouascriptv2'], function(){
     coveoinit=true;
     
