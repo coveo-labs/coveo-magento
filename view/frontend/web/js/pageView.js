@@ -1,5 +1,5 @@
 define([
-    'Magento_Customer/js/customer-data',
+    'Magento_Customer/js/customer-data'
 ], function(customerData) {
 
     // Tracking operation timeout
@@ -25,8 +25,11 @@ define([
       if (alreadySent) {
             return;
         }
-        initCoveo();
-        coveoua('send', 'pageview');
+        require(['coveouascriptv2'], function(){
+          window.initCoveo(function(){
+            coveoua('send', 'pageview');
+          });
+        });
         /* This sents a normal pageview and not a collect pageview */
         /*Parameters should be done by the coveoua script ????*/ 
         /*

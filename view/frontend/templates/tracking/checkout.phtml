@@ -8,11 +8,14 @@ $trackingOrderParams = $block->getOrderTrackingParams();
 <?php if ($isLibraryIncluded === true): ?>
 
     <script id="<?=$block->getScriptId()?>" type='text/javascript'>
-        initCoveo();
+        require(['coveouascriptv2'], function(){
+          window.initCoveo(function() {
         <?php foreach($trackingProductsParams as $productData): ?>
         coveoua('ec:addProduct', <?=json_encode($productData);?>);
         <?php endforeach ?>
         coveoua('ec:setAction', 'purchase', <?=json_encode($trackingOrderParams);?>);
+          });
+        });
     </script>
 
 <?php else: ?>

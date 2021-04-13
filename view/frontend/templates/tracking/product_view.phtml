@@ -7,9 +7,13 @@ $trackingParameters = $block->getProductTrackingParams();
 <?php if ($isLibraryIncluded === true): ?>
 
 <script id="<?=$block->getScriptId()?>" type="text/javascript">
-    initCoveo();
+    require(['coveouascriptv2'], function(){
+      window.initCoveo(function() {
     coveoua('ec:addProduct', <?=json_encode($trackingParameters);?>);
     coveoua('ec:setAction', 'detail');
+    coveoua('send', 'pageview');
+      });
+    });
 </script>
 
 <?php else: ?>

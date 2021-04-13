@@ -62,6 +62,7 @@ class ClickAfterSearch extends \Magento\Framework\View\Element\Template implemen
         $this->analyticsConfig = $analyticsConfig;
         $this->productCollectionFactory = $productCollectionFactory;
         $this->tracking = $tracking;
+        error_log('ClickAfterSearch.php');
     }
 
     /**
@@ -205,6 +206,7 @@ class ClickAfterSearch extends \Magento\Framework\View\Element\Template implemen
      */
     public function _toHtml()
     {
+      
         if ($this->analyticsConfig->isLibraryIncluded() === false) {
             return '';
         }

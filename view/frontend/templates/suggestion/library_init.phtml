@@ -102,7 +102,7 @@ require([
             () =>
               (getFromAutocompleteOptions(options, 'onSelect') || (() => {}))
                 .apply(input, [ss]))(this.get(0), suggestion);
-          if (window.coveoua && suggestion) {
+          if (window.coveouav2 && suggestion) {
             const value = suggestion;
             //window.coveoua('set', 'context_querysuggest', 'true');
             /*window.coveoua('set', 'custom',  {

@@ -14,4 +14,17 @@ class PageView extends \Magento\Framework\View\Element\Template implements Scrip
     {
         return self::SCRIPT_ID;
     }
+
+        /**
+     * @inheritdoc
+     */
+    public function _toHtml()
+    {
+      
+        if ($this->getRequest()->getFullActionName()=='catalog_product_view') {
+            return '';
+        }
+        return parent::_toHtml();
+    }
+
 }

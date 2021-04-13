@@ -139,6 +139,10 @@
                     <label>Analytics Url</label>
                     <comment><![CDATA[The url for the Coveo Analytics, normal: https://platform.cloud.coveo.com/rest/ua/v15/analytics/]]></comment>
                 </field> 
+               <field id="library_endpoint" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Analytics Library</label>
+                    <comment><![CDATA[The url for the Coveo Analytics Library, normal: https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua (without .js extension!!)]]></comment>
+                </field> 
                 <field id="searchhub" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                   <label>SearchHub name</label>
                   <comment><![CDATA[The search hub name, used in search and analytics, normal: search]]></comment>

@@ -38,7 +38,7 @@
                 <api_version>1</api_version>
                 <include_library>1</include_library>
                 <api_endpoint>https://platform.cloud.coveo.com/rest/ua/v15/analytics/</api_endpoint>
-                <library_endpoint>https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js</library_endpoint>
+                <library_endpoint>https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua</library_endpoint>
                 <track_userid>1</track_userid>
                 <searchhub>search</searchhub>
                 <tab>products</tab>

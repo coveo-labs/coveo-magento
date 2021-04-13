@@ -10,6 +10,7 @@ define([
      * @type {*}
      */
     var config = {};
+    var sent = false;
 
     /**
      * Get element position
@@ -23,14 +24,10 @@ define([
         return allSkus.indexOf(sku);
     }
 
-    /**
-     * Click handler for product link elements
-     *
-     * @param {*} event
-     */
-    function clickHandler(event) {
-      initCoveo();
-        var element = $(this);
+    function sentAnalytics(_this, _event) {
+      require(['coveouascriptv2'], function(){
+        window.initCoveo(function(){
+        var element = $(_this);
         var linkValue = element.attr('href');
         var productSku = element.attr(config.attributeName);
         //For TESTING
@@ -46,7 +43,7 @@ define([
             console.debug('Coveo: click after search captured');
         }
 
-        if (window.coveoua === undefined) {
+        if (coveoua === undefined) {
             console.warn('Coveo: Text Analytics is not included but analytics is active');
             return;
         }
@@ -73,7 +70,7 @@ define([
 
             product = {
                 id: productSku,
-                position: getElementPosition(productSku, event.data.parent) + (config.pageSize * (config.currentPage - 1))
+                position: getElementPosition(productSku, _event.data.parent) + (config.pageSize * (config.currentPage - 1))
             }
         }
         coveoua('ec:addProduct', product);
@@ -84,7 +81,7 @@ define([
             'list': 'coveo:search:'+searchId
         });
 
-        var needRedirect = (event.metaKey || event.altKey || event.ctrlKey) === false;
+        var needRedirect = (_event.metaKey || _event.altKey || _event.ctrlKey) === false;
 
         var timeout = null;
         if (needRedirect) {
@@ -94,32 +91,35 @@ define([
             }, 1000);
         }
 
-        coveoua('send', 'event', 'cart', 'click', {
-            hitCallback: function () {
-                if (config.debug) {
-                    console.debug('Coveo: click after search tracked');
-                }
-                if (needRedirect) {
-                    if (timeout !== null) {
-                        clearTimeout(timeout);
-                    }
-                    if (config.debug) {
-                        console.debug('Coveo: redirecting to ' + linkValue);
-                    }
-                    document.location.href = linkValue;
-                }
-            },
-        });
+        coveoua('send', 'event', 'cart');
+        document.location.href = linkValue;
 
         // We have to allow users to open links in a new window
         if (needRedirect === false) {
             return
         }
-
-        // Prevent default click behaviour
-        event.preventDefault();
-        event.stopPropagation();
         return false;
+
+      });
+      });
+    }
+    /**
+     * Click handler for product link elements
+     *
+     * @param {*} event
+     */
+    function clickHandler(event) {
+      var _event = event;
+      var _this = this;
+      // Prevent default click behaviour
+
+      event.preventDefault();
+      event.stopPropagation();
+      if (sent==true) return;
+      sent = true;
+      sentAnalytics(_this,_event);
+      return false;
+      
     }
 
     /**

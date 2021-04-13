@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed pr1ca, with full category
 - Fixed Analytics request from main and search pages (different events)
 - Fixed ClientId=VisitorId
-
+- Fixed ClickAfterSearch
+- Fixed Suggestions
 
 ## [1.9.99] - 2021-04-08
 ### Added

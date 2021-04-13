@@ -3,4 +3,11 @@
 $libraryEndpoint = $block->getLibraryEndpoint();
 ?>
 
-<script src="<?= $block->getViewFileUrl('Coveo_Search::js/coveoua.js')?>"></script>
+<script>
+require.config({
+    paths: {
+        coveouascriptv2: '<?=$libraryEndpoint?>'
+    }
+  });
+</script>
+

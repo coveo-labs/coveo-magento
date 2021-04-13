@@ -12,27 +12,32 @@ $api = $block->getApi();
 ?>
 
 <script id="<?=$block->getScriptId()?>" type="text/javascript">
-
   var coveoinit=false;
-  function initCoveo(){
-    if (coveoinit) return;
+
+  window.initCoveo=function(callback){
+    if (coveoinit) callback();
+    require(['coveouascriptv2'], function(){
     coveoinit=true;
+    
     coveoua("init", "<?=$trackingKey?>","<?=$api?>");
     coveoua('set', 'custom',  {
       context_store_id: '<?=$storeid?>',
       context_website: '<?=$siteid?>'
     });
 <?php if($currency): ?>
-  coveoua('set','currencyCode','<?=$currency?>');
+coveoua('set','currencyCode','<?=$currency?>');
 <?php endif; ?>
 <?php if($searchid!='' && $searchid!=null): ?>
-  coveoua('set','searchId','<?=$searchid?>');
+coveoua('set','searchId','<?=$searchid?>');
 <?php endif; ?>
 <?php if($uid!=''): ?>
-  coveoua('set','userId','<?=$uid?>');
+coveoua('set','userId','<?=$uid?>');
 <?php endif; ?>
 <?php if($debugMode): ?>
-  coveoua('set','debug','true');
+coveoua('set','debug','true');
 <?php endif; ?>
-  }
+callback();
+});
+}
+
 </script>

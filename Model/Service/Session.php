@@ -109,7 +109,7 @@ class Session implements SessionInterface
             $this->cookieMetadataFactory
                 ->createPublicCookieMetadata()
                 ->setDurationOneYear()
-                ->setHttpOnly(true)
+                //->setHttpOnly(true)
                 ->setPath($this->sessionManager->getCookiePath())
                 ->setDomain($this->sessionManager->getCookieDomain())
         );
@@ -126,7 +126,7 @@ class Session implements SessionInterface
             $this->cookieMetadataFactory
                 ->createPublicCookieMetadata()
                 ->setDurationOneYear()
-                ->setHttpOnly(true)
+                //->setHttpOnly(true)
                 ->setPath($this->sessionManager->getCookiePath())
                 ->setDomain($this->sessionManager->getCookieDomain())
         );
