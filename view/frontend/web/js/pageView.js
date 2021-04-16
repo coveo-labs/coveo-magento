@@ -55,7 +55,7 @@ define([
             customer.subscribe(executePageTracking);
             timeout = setTimeout(function () {
                 executePageTracking(customer());
-            }, 1000);
+            }, 5);
             customerData.reload(['customer']);
         } else {
             executePageTracking(customer());

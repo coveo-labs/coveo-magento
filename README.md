@@ -214,7 +214,7 @@ To do this edit your theme file `view/frontend/templates/product/list.phtml`, in
 ```
 
 If you are using an AJAX pagination approach (for example an infinite scrolling loading) you also have to add an attribute `data-search-id` on the `a` tag with the product's link.
-In order to to this edit your theme file `view/frontend/templates/product/list.phtml` to load the Coveo Search ID value from registry key `coveo_search_response` (available from `\Coveo\Search\Model\Service\Search::SEARCH_RESULT_REGISTRY_KEY` class constant), 
+In order to to this edit your theme file `view/frontend/templates/product/list.phtml (or magento2\vendor\magento\module-catalog\view\frontend\templates\product\list.phtml)` to load the Coveo Search ID value from registry key `coveo_search_response` (available from `\Coveo\Search\Model\Service\Search::SEARCH_RESULT_REGISTRY_KEY` class constant), 
 in this way:
 ```php
 <?php

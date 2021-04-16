@@ -70,6 +70,12 @@ define([
 
             product = {
                 id: productSku,
+                brand: product['brand'],
+                category: product['category'],
+                name: product['name'],
+                //position: product['position'],
+                price: product['price'],
+                quantity: product['quantity'],
                 position: getElementPosition(productSku, _event.data.parent) + (config.pageSize * (config.currentPage - 1))
             }
         }

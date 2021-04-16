@@ -86,9 +86,9 @@ class SuggestionConfig implements SuggestionConfigInterface
             'locale' => 'en_us',
             "userIp"=> $this->track->getRemoteAddr(),
             "userAgent"=>$this->track->getUserAgent(),
-            'pageId'=>$this->track->getUuid(),
-            'documentLocation'=>$this->track->getLastPage(),
-            'documentReferrer'=>$this->track->getCurrentPage(),
+            /*'pageId'=>$this->track->getUuid(),*/
+            'documentReferrer'=>$this->track->getLastPage(),
+            'documentLocation'=>$this->track->getCurrentPage(),
             'visitorId' => $this->session->getVisitorId(),
             'searchHub' => $this->analytics->getHub(),
             'clientId'=>$this->session->getClientId(),

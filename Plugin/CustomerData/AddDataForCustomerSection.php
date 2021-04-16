@@ -9,6 +9,8 @@ namespace Coveo\Search\Plugin\CustomerData;
 use \Magento\Framework\DataObject;
 use Coveo\Search\Api\Service\SessionInterface;
 use Magento\Customer\CustomerData\Customer\Interceptor as CustomerInterceptor;
+use Coveo\Search\Api\Service\TrackingInterface;
+
 
 class AddDataForCustomerSection
 {
@@ -16,6 +18,7 @@ class AddDataForCustomerSection
      * @var SessionInterface
      */
     protected $session;
+    protected $tracking;
 
     /**
      * AddDataForCustomerSection constructor.
@@ -23,9 +26,11 @@ class AddDataForCustomerSection
      * @param SessionInterface $session
      */
     public function __construct(
-        SessionInterface $session
+        SessionInterface $session,
+        TrackingInterface $track
     ) {
         $this->session = $session;
+        $this->tracking = $track;
     }
 
     /**
@@ -37,7 +42,7 @@ class AddDataForCustomerSection
      */
     public function afterGetSectionData(CustomerInterceptor $subject, $result)
     {
-        $result['customerId'] = $this->getCustomerId();
+        $result['customerId'] = $this->tracking->getCustomerId();
         $result['storeId'] = $this->getStoreId();
         return $result;
     }
@@ -49,7 +54,8 @@ class AddDataForCustomerSection
      */
     public function getCustomerId()
     {
-        return $this->session->getCustomerId();
+        return $this->tracking->getCustomerId();
+        //return $this->session->getCustomerId();
     }
 
     /**

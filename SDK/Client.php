@@ -164,10 +164,14 @@ class Client implements ClientInterface
         }
         $path = '';
         $anonymous="true";
+        $username="anonymous";
+        $userDisplayName="anonymous";
         if ($this->_sessionStorage)  {
         if ($this->_sessionStorage->isLoggedIn()) {
             if ($this->_sessionStorage->getCustomerId()!==''){
               $anonymous="false";
+              $username=$this->_sessionStorage->getCustomerId();
+              $userDisplayName=$username;
             };
           }
         }
@@ -183,6 +187,8 @@ class Client implements ClientInterface
                 'enableMLDidYouMean'=> 'false',//($typoCorrection ? 'true' : 'false'),
                 'enableFallbackSearchOnEmptyQueryResults' => 'true',
                 'anonymous'=> $anonymous,
+                'username' => $username,
+                'userDisplayName'=>$userDisplayName,
                 'locale' => '"'.$this->_language.'"',
                 'context' => '{"context_store_id":"'.$this->_storeCode.'","context_website":"'.$this->_language.'"'.$additionalContext.'}',
                 'numberOfResults' => $limit,
@@ -208,8 +214,21 @@ class Client implements ClientInterface
 
         try {
             //Get userip
+            $visitorId = '';
             if ($tracking!=null) {
-              $params['userIp']=$tracking->getRemoteAddr();
+              //Check for visitorId, if not there, add it
+              $visitorId = $tracking->getSession()->getVisitorId();
+              $this->_logger->debug('Got VisitorId: '.$visitorId);
+              if ($visitorId=='') {
+                $visitorId = $tracking->getUuid();
+                $this->_logger->debug('Created VisitorId: '.$visitorId);
+                $tracking->getSession()->setVisitorId($visitorId);
+              }
+              $params['uip']=$tracking->getRemoteAddr();
+              $analytics = $tracking->getAnalytics();
+              $params['visitorId']=$visitorId;
+              $analytics['clientId'] = $visitorId;
+              $params['analytics']=json_encode($analytics);
             }
             $response = $this->doRequest($path, self::HTTP_METHOD_GET, $params);
             $result = new SearchResult($response);
@@ -227,7 +246,7 @@ class Client implements ClientInterface
               $actionType="interface";
               //If on Main page
               if ($onMain==true) {
-                $actionCause="searchboxsubmit";
+                $actionCause="searchBoxSubmit";
                 $actionType="search box";
               }
               //If from Query suggest
@@ -251,6 +270,7 @@ class Client implements ClientInterface
               $trackResponse=$tracking->executeTrackingSearchRequest([
                 "actionCause"=> $actionCause,
                 "qs" => $qs,
+                "visitorId" => $visitorId,
                 "actionType"=> $actionType,
                 "originLevel1"=> $hub,
                 "originLevel2"=> $tab,
@@ -450,7 +470,12 @@ class Client implements ClientInterface
       //$this->_logger->debug("Params BEFORE: " . print_r($params, true));
       $params = $this->cleanParameters($params);
       $urlParamsExtra = $this->cleanParameters($urlParamsExtra);
+      if ($httpMethod == self::HTTP_METHOD_POST) {
+        $url = $this->_buildUrl($path, array(), $urlParamsExtra);
+
+      } else {
         $url = $this->_buildUrl($path, $params, $urlParamsExtra);
+      }
 
         if($this->_logger) {
             $this->_logger->debug("Performing API request to url: " . $url . " with method: " . $httpMethod);
@@ -464,7 +489,6 @@ class Client implements ClientInterface
 
         if ($httpMethod == self::HTTP_METHOD_POST) {
             curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array("X_FORWARDED_FOR: ".$params['userIp']));
             if ($withoutArray==true) {
               $payload = json_encode($params );  
             } else {
@@ -474,15 +498,16 @@ class Client implements ClientInterface
             $this->_logger->debug("POST Payload: " . $payload);
             curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
             curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json',
+            "X-Forwarded-For: ".$params['uip'],
             self::TRACKING_AGENT_HEADER.': '.$this->_agent,
             $authorization,
             'accept: application/json'));
             
         } else {
-          curl_setopt($ch, CURLOPT_HTTPHEADER, array("X_FORWARDED_FOR: ".$params['userIp']));
           curl_setopt($ch, CURLOPT_HTTPHEADER, [
             self::TRACKING_AGENT_HEADER.': '.$this->_agent,
             $authorization,
+            "X-Forwarded-For: ".$params['uip'],
             'accept: application/json'
         ]);
         }

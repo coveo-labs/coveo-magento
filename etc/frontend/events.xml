@@ -17,5 +17,10 @@
     <event name="checkout_cart_update_items_before">
         <observer name="CoveoTrackCartUpdateQty" instance="Coveo\Search\Observer\Tracking\TrackCartUpdateQty" />
     </event>
-
+    <event name="customer_logout">
+       <observer instance="Coveo\Search\Observer\Tracking\Logout" name="CoveoLogout"/>
+    </event>
+    <event name="customer_login">
+       <observer instance="Coveo\Search\Observer\Tracking\Login" name="CoveoLogin"/>
+    </event>
 </config>

@@ -17,6 +17,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Coveo\Search\SDK\Client;
 use Coveo\Search\SDK\ClientBuilder;
 use Coveo\Search\SDK\Exception;
+use Magento\Framework\Stdlib\CookieManagerInterface;
 
 class Tracking implements TrackingInterface
 {
@@ -91,6 +92,7 @@ class Tracking implements TrackingInterface
      * @var ClientBuilder
      */
     protected $clientBuilder;
+    protected $cookieManager;
 
     /**
      * Config constructor.
@@ -120,7 +122,8 @@ class Tracking implements TrackingInterface
         StoreManagerInterface $storeManager,
         ProductRepositoryInterface $productRepository,
         CategoryCollectionFactory $categoryCollectionFactory,
-        ClientBuilder $clientBuilder
+        ClientBuilder $clientBuilder,
+        CookieManagerInterface $cookieManager
     ) {
         $this->logger = $logger;
         $this->productMetadata = $productMetadata;
@@ -134,6 +137,7 @@ class Tracking implements TrackingInterface
         $this->productRepository = $productRepository;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
         $this->clientBuilder = $clientBuilder;
+        $this->cookieManager = $cookieManager;
     }
 
     /**
@@ -198,8 +202,9 @@ class Tracking implements TrackingInterface
      * @inheritdoc
      */
     public function getCustomerId() {
-        if ($this->analyticsConfig->isUserIdTrackingEnable() && $this->session->isLoggedIn()) {
-         return $this->session->getCustomerId();
+      if ($this->session->isLoggedIn()) {
+        $cid=$this->cookieManager->getCookie('coveo_UID');
+        return $cid;
       }
       return '';
     }
@@ -250,6 +255,8 @@ class Tracking implements TrackingInterface
             'quantity' => $quantity,
             'position' => ($position),
         ];
+        //Add current customer into it
+        $trackingProductParams['uid']=$this->getCustomerId();
 
         $categoryIds = $product->getCategoryIds();
         if ($categoryIds !== null && count($categoryIds) > 0) {
@@ -316,19 +323,32 @@ class Tracking implements TrackingInterface
         ];
     }
 
+    private function getRemoteAddrFix() {
+        if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+            //ip from share internet
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+            //ip pass from proxy
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }else{
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+    }
     /**
      * @inheritdoc
      */
     public function getRemoteAddr()
     {
-        $remoteAddr = $this->request->getClientIp(true);
+      $remoteAddr = $this->getRemoteAddrFix();
+        /*$remoteAddr = $this->request->getClientIp(true);
         if ($remoteAddr !== null && strpos($remoteAddr, ',') !== false) {
             $remoteAddrParts = explode(',', $remoteAddr);
             $remoteAddr = $remoteAddrParts[0];
         }
         if ($remoteAddr=='::1') {
           $remoteAddr='127.0.0.1';
-        }
+        }*/
         return $remoteAddr;
     }
 
@@ -368,27 +388,45 @@ class Tracking implements TrackingInterface
         return $this->storeManager->getStore()->getCurrentCurrency()->getCode();
     }
 
+    public function getAnalytics()
+    {
+        $myana=[/*"userIp"=> $this->getRemoteAddr(),*/
+        "userAgent"=>$this->getUserAgent(),
+        /*'pageId'=>$this->getUuid(),*/
+        'clientId'=>$this->session->getVisitorId(),
+        'documentReferrer'=>$this->getLastPage(),
+        'documentLocation'=>$this->getCurrentPage()];
+        return $myana;
+  
+    
+    }
     /**
      * @inheritdoc
      */
     public function executeTrackingRequest($params)
     {
-      
+      //Check for visitorId
+      $visitorId=$this->session->getVisitorId();
+      if (isset($params['visitorId']) && $params['visitorId']!=null){
+         $visitorId = $params['visitorId'];
+         unset($params['visitorId']);
+      }
         $profilingParams = $this->getProfilingParams();
         $myana=["userIp"=> $this->getRemoteAddr(),
           "userAgent"=>$this->getUserAgent(),
-          'pageId'=>$this->getUuid(),
-          'clientId'=>$this->session->getVisitorId(),
-          'documentLocation'=>$this->getLastPage(),
-          'documentReferrer'=>$this->getCurrentPage()
+          /*'pageId'=>$this->getUuid(),*/
+          'clientId'=>$visitorId,
+          'documentReferrer'=>$this->getLastPage(),
+          'documentLocation'=>$this->getCurrentPage()
       ];
         $params = array_merge([
             'z' => $this->getUuid(),
-            "userIp"=> $this->getRemoteAddr(),
-            'analytics' => $myana,
+            "uip"=> $this->getRemoteAddr(),
+            /*'referrer' => $this->getLastPage(),*/
+            /*'analytics' => $myana,*/
             /*'tid' => $this->analyticsConfig->getKey(),*/
-            'cid' => $this->session->getVisitorId(),
-            'pid' => $this->getUuid(),
+            'cid' => $visitorId,
+            /*'pid' => $this->getUuid(),*/
             'v' => $this->analyticsConfig->getAPIVersion(),
             'cu' => $this->getCurrencyCode(),
             'context_store_id'=> $this->config->getStoreCode(),
@@ -429,17 +467,24 @@ class Tracking implements TrackingInterface
            $custom['suggestions']=str_replace(',',';',$params['qs']);
         }
         unset($params['qs']);
+        //Check for visitorId
+        $visitorId=$this->session->getVisitorId();
+        if (isset($params['visitorId']) && $params['visitorId']!=null){
+           $visitorId = $params['visitorId'];
+           unset($params['visitorId']);
+        }
+
         $myana=["userIp"=> $this->getRemoteAddr(),
           "userAgent"=>$this->getUserAgent(),
-          'pageId'=>$this->getUuid(),
-          'clientId'=>$this->session->getVisitorId(),
-          'documentLocation'=>$this->getLastPage(),
-          'documentReferrer'=>$this->getCurrentPage()
+          /*'pageId'=>$this->getUuid(),*/
+          'clientId'=>$visitorId,
+          'documentReferrer'=>$this->getLastPage(),
+          'documentLocation'=>$this->getCurrentPage()
       ];
         $profilingParams = ['uip' => $this->getRemoteAddr(),
-        "userIp"=> $this->getRemoteAddr(),
+        'referrer' => $this->getLastPage(),
         'userAgent' => $this->getUserAgent(),
-        'clientId' => $this->session->getVisitorId(),
+        'clientId' => $visitorId,
         'originLevel3' => $this->getLastPage(),
         'analytics' => $myana,
         'mobile' => false,
@@ -452,18 +497,24 @@ class Tracking implements TrackingInterface
          ];
          $profilingParams['uid']='anonymous';
          $profilingParams['anonymous']="true";
+         $username="anonymous";
+         $userDisplayName="anonymous";
         if ($this->analyticsConfig->isUserIdTrackingEnable() && $this->session->isLoggedIn()) {
             if ($this->session->getCustomerId()!==''){
               $profilingParams['uid'] = $this->session->getCustomerId();
               $profilingParams['anonymous']="false";
+              $username= $this->session->getCustomerId();
+              $userDisplayName=$username;
             };
         }
+        $profilingParams['username']=$username;
+        $profilingParams['userDisplayName']=$userDisplayName;
         $params = array_merge([
             'z' => $this->getUuid(),
             /*'tid' => $this->analyticsConfig->getKey(),*/
             'v' => $this->analyticsConfig->getAPIVersion()
         ], $profilingParams, $params);
-        $extraParams = array('org='.$this->config->getApiOrg(),'visitor='.$this->session->getVisitorId());
+        $extraParams = array('org='.$this->config->getApiOrg(),'visitor='.$visitorId);
         //$this->logger->debug(json_encode($params));
         $this->logger->debug(json_encode($extraParams));
         $client = $this->getClient();

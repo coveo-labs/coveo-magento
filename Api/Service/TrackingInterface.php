@@ -117,6 +117,7 @@ interface TrackingInterface
      * @return string
      */
     public function getCurrencyCode();
+    public function getAnalytics();
 
     /**
      * Get currency code

@@ -123,6 +123,11 @@ class ClickAfterSearch extends \Magento\Framework\View\Element\Template implemen
         return self::SCRIPT_ID;
     }
 
+    public function getCustomerId()
+    {
+        return $this->tracking->getCustomerId();
+    }
+
     /**
      * Get product listed in page
      *

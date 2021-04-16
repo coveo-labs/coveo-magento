@@ -4,7 +4,6 @@
         <referenceContainer name="after.body.start">
             <!-- Tracking -->
             <block class="Coveo\Search\Block\Tracking\Library" name="coveo_tracking_library" template="Coveo_Search::tracking/library.phtml" ifconfig="coveo/active/tracking" />
-            <block class="Coveo\Search\Block\Tracking\LibraryInit" name="coveo_tracking_library_init" template="Coveo_Search::tracking/library_init.phtml" ifconfig="coveo/active/tracking" />
             <!-- Suggestions -->
             <block class="Coveo\Search\Block\Suggestion\Library" name="coveo_suggestion_library" template="Coveo_Search::suggestion/library.phtml" ifconfig="coveo/active/suggestion" />
             <block class="Coveo\Search\Block\Suggestion\LibraryInit" name="coveo_suggestion_library_init" template="Coveo_Search::suggestion/library_init.phtml" ifconfig="coveo/active/suggestion" />
@@ -13,6 +12,7 @@
         </referenceContainer>
         <referenceContainer name="before.body.end">
             <!-- Tracking -->
+            <block class="Coveo\Search\Block\Tracking\LibraryInit" name="coveo_tracking_library_init" template="Coveo_Search::tracking/library_init.phtml" ifconfig="coveo/active/tracking" />
             <block class="Coveo\Search\Block\Tracking\PageView" after="-" name="coveo_tracking_pageview" template="Coveo_Search::tracking/page_view.phtml" ifconfig="coveo/active/tracking" />
         </referenceContainer>
     </body>

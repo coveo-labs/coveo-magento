@@ -26,6 +26,7 @@ class Session implements SessionInterface
      * @var string
      */
     const COOKIE_USERID = '_ta';
+    const COOKIE_CUSTOMERID = 'coveo_UID';
 
     /**
      * @var string
@@ -73,6 +74,7 @@ class Session implements SessionInterface
      * @var ClientBuilder
      */
     protected $clientBuilder;
+    private $currentVisitor;
 
     /**
      * @param SessionManagerInterface $sessionManager
@@ -96,6 +98,7 @@ class Session implements SessionInterface
         $this->cookieManager = $cookieManager;
         $this->cookieMetadataFactory = $cookieMetadataFactory;
         $this->clientBuilder = $clientBuilder;
+
     }
 
     /**
@@ -152,9 +155,16 @@ class Session implements SessionInterface
      */
     public function getVisitorId()
     {
+        
         $visId = $this->cookieManager->getCookie(self::COOKIE_VISITORID);
         if($visId === null || trim($visId) === ''){
-          $visId ='';
+          //create a new one
+          /*if ($this->currentVisitor===null) {
+            $visId = $this->clientBuilder->build()->getUuid();
+            $session->setVisitorId($visId);
+            $this->currentVisitor = $visId;
+          }*/
+          return '';
         }
         return $visId;
     }
@@ -198,12 +208,30 @@ class Session implements SessionInterface
      */
     public function getCustomerId()
     {
-        $customer = $this->session->getCustomer();
-        if ($customer === null){
-            return null;
+      if ($this->isLoggedIn()) {
+        $cust = $this->cookieManager->getCookie(self::COOKIE_CUSTOMERID);
+        if ($cust === null || $cust === false || $cust === '') {
+            $cust = $this->session->getCustomer();
+            if ($cust === null){
+              return null;
+            }
+            //Will be handled by logout/login events
+            /*$this->cookieManager->setPublicCookie(
+              self::COOKIE_CUSTOMERID,
+              $cust->getId(),
+              $this->cookieMetadataFactory
+                  ->createPublicCookieMetadata()
+                  ->setDurationOneYear()
+                  //->setHttpOnly(true)
+                  ->setPath($this->sessionManager->getCookiePath())
+                  ->setDomain($this->sessionManager->getCookieDomain())
+          
+            );*/
+            $cust = $cust->getId();
         }
-
-        return $customer->getId();
+       return $cust;
+      }
+      else return '';
     }
 
     /**

@@ -9,6 +9,7 @@ $trackingOrderParams = $block->getOrderTrackingParams();
 
     <script id="<?=$block->getScriptId()?>" type='text/javascript'>
         require(['coveouascriptv2'], function(){
+          var uid='<?=$trackingProductsParams[0]['uid'];?>';
           window.initCoveo(function() {
         <?php foreach($trackingProductsParams as $productData): ?>
         coveoua('ec:addProduct', <?=json_encode($productData);?>);

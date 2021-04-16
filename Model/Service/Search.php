@@ -209,6 +209,10 @@ class Search implements SearchInterface
             $limitPage = $this->requestParser->getLimit();
             $pagenr = $this->requestParser->getPage();
             $params['referrer']=$params['dr'];
+            //Check if referrer is there else use dl
+            if (empty($params['referrer'])) {
+              $params['referrer']=$params['dl'];
+            }
 
             $this->logger->debug('[search] Executing search..');
             //$this->logger->debug('[search] Executing search.. visitor: '.$this->cookie->getCookie(self::COOKIE_VISITORID));

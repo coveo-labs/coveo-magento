@@ -70,7 +70,7 @@ class TrackAddToCart implements ObserverInterface
 
         $this->tracking->executeTrackingRequest([
             't' => 'event',
-            'pid' => $productData['id'],
+            /*'pid' => $productData['id'],*/
             'pr1id' => $productData['id'],
             'pr1nm' => $productData['name'],
             'pr1ca' => $productData['category'],
