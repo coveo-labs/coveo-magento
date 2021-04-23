@@ -333,6 +333,10 @@ class Tracking implements TrackingInterface
         }else{
             $ip = $_SERVER['REMOTE_ADDR'];
         }
+        if ($ip !== null && strpos($ip, ',') !== false) {
+          $ipP = explode(',', $ip);
+          $ip = $ipP[0];
+      }
         return $ip;
     }
     /**
