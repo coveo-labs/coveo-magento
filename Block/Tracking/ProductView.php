@@ -76,7 +76,7 @@ class ProductView extends \Magento\Framework\View\Element\Template implements Sc
             return null;
         }
 
-        return $this->tracking->getProductTrackingParams($product);
+        return $this->tracking->getProductTrackingParamsPDP($product);
     }
 
     /**

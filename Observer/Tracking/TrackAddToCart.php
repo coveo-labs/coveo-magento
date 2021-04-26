@@ -30,6 +30,7 @@ class TrackAddToCart implements ObserverInterface
      * @var TrackingInterface
      */
     protected $tracking;
+    protected $request;
 
     /**
      * @param LoggerInterface $logger
@@ -41,12 +42,14 @@ class TrackAddToCart implements ObserverInterface
         LoggerInterface $logger,
         TrackingInterface $tracking,
         ConfigInterface $config,
-        AnalyticsConfigInterface $analyticsConfig
+        AnalyticsConfigInterface $analyticsConfig,
+        \Magento\Framework\App\RequestInterface $request
     ) {
         $this->logger = $logger;
         $this->tracking = $tracking;
         $this->config = $config;
         $this->analyticsConfig = $analyticsConfig;
+        $this->request = $request;
     }
 
     /**
@@ -55,14 +58,28 @@ class TrackAddToCart implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-      $this->logger->debug('[cart tracking add]');
+      //The request now contains the searchId to use
+      $searchid = '';//$this->tracking->getSearchId();
+      $position = '';
+      if (isset($this->request->getParams()['recAdd'])) {
+        $searchid = $this->request->getParams()['recAdd'];
+      }
+      if ($searchid!='') {
+        $searchid = 'coveo:search:'.$searchid;
+      }
+      if (isset($this->request->getParams()['recAddPos'])) {
+        $position = $this->request->getParams()['recAddPos']+1;
+      }
+      $this->logger->debug('[cart tracking add] searchid='.$searchid);
+      $this->logger->debug('[cart tracking add] Request:');
+      $this->logger->debug('[cart tracking add] pages='.print_r($this->request->getParams(), true));
       if ($this->config->isTrackingEnabled() === false) {
             return;
         }
 
         /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
         $product = $observer->getProduct();
-        $productData = $this->tracking->getProductTrackingParams($product, 1, round($product->getCartQty()));
+        $productData = $this->tracking->getProductTrackingParams($product, $position, round($product->getCartQty()));
         $this->logger->info('[cart tracking update] Final Price Item   : '.$product->getFinalPrice());
         $this->logger->info('[cart tracking update] Final Price Product: '.$productData['price']);
 
@@ -77,6 +94,8 @@ class TrackAddToCart implements ObserverInterface
             'pr1br' => $productData['brand'],
             'pr1pr' => $productData['price'],
             'pr1qt' => $productData['quantity'],
+            'pr1ps' => $position,
+            'pal' => $searchid,
             'pa' => 'add',
             'ec' => 'cart',
             'ea' => 'add',

@@ -143,8 +143,9 @@ class Session implements SessionInterface
     {
         $searchId = $this->cookieManager->getCookie(self::COOKIE_SEARCHID);
         if($searchId === null || trim($searchId) === ''){
-            $uuid = $this->clientBuilder->build()->getUuid();
-            $searchId = substr(self::SEARCH_ID_PREFIX.$uuid, 0, 36);
+            //$uuid = $this->clientBuilder->build()->getUuid();
+            //$searchId = substr(self::SEARCH_ID_PREFIX.$uuid, 0, 36);
+            $searchId = '';
         }
         return $searchId;
     }

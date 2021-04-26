@@ -100,6 +100,7 @@ class TrackCartUpdateQty implements ObserverInterface
                 'pr1br' => $productData['brand'],
                 'pr1pr' => $productData['price'],
                 'pr1qt' => $productData['quantity'],
+                /*'list' => 'coveo:search:'.$this->tracking->getSearchId(),*/
                 'pa' => $event,
                 'ec' => 'cart',
                 'ea' => $event,

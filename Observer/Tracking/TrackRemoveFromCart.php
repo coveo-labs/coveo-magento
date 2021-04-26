@@ -67,6 +67,7 @@ class TrackRemoveFromCart implements ObserverInterface
             'pr1br' => $productData['brand'],
             'pr1pr' => $productData['price'],
             'pr1qt' => $productData['quantity'],
+            /*'list' => 'coveo:search:'.$this->tracking->getSearchId(),*/
             'pa' => 'remove',
             'ec' => 'cart',
             'ea' => 'remove',

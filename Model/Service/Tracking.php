@@ -32,6 +32,7 @@ class Tracking implements TrackingInterface
      * @var LoggerInterface
      */
     protected $logger;
+    
 
     /**
      * @var ProductMetadataInterface
@@ -257,20 +258,58 @@ class Tracking implements TrackingInterface
         ];
         //Add current customer into it
         $trackingProductParams['uid']=$this->getCustomerId();
-
+        
         $categoryIds = $product->getCategoryIds();
+        $this->loadCategories($categoryIds);
         if ($categoryIds !== null && count($categoryIds) > 0) {
             /*if (!isset($this->categories[$categoryIds[0]])) {
                 $this->loadCategory($categoryIds[0]);
             }*/
-            $pathSize  = count($categoryIds);
-            //$this->logger->info('[getProductTrackingParams] No of Categories : '.$pathSize);
-            $path = array();
-                for ($i = 1; $i < $pathSize; $i++) {
-                    $path[] = $this->loadCategory($categoryIds[$i])->getName();
-                }
+            $categories = array();
+            foreach ($categoryIds as $categoryId) {
+              if ($this->categories[$categoryId]) {
+                  $categories[] = $this->categories[$categoryId];
+              }
+            }
                 
-            $trackingProductParams['category'] = implode('/', $path);//$this->categories[$categoryIds[0]]->getName();
+            $trackingProductParams['category'] = implode('|', $categories);//$this->categories[$categoryIds[0]]->getName();
+        } else {
+            $trackingProductParams['category'] = null;
+        }
+        //$this->logger->info('[getProductTrackingParams] Final Price Item : '.$product->getFinalPrice());
+        //$this->logger->info('[getProductTrackingParams] Category         : '.$trackingProductParams['category']);
+
+        return $trackingProductParams;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getProductTrackingParamsPDP($product)
+    {
+        $trackingProductParams = [
+            'id' => $product->getSku(),
+            'name' => $product->getName(),
+            'brand' => $product->getManufacturer(),
+            'price' => $product->getFinalPrice(),
+        ];
+        //Add current customer into it
+        $trackingProductParams['uid']=$this->getCustomerId();
+        
+        $categoryIds = $product->getCategoryIds();
+        $this->loadCategories($categoryIds);
+        if ($categoryIds !== null && count($categoryIds) > 0) {
+            /*if (!isset($this->categories[$categoryIds[0]])) {
+                $this->loadCategory($categoryIds[0]);
+            }*/
+            $categories = array();
+            foreach ($categoryIds as $categoryId) {
+              if ($this->categories[$categoryId]) {
+                  $categories[] = $this->categories[$categoryId];
+              }
+            }
+                
+            $trackingProductParams['category'] = implode('|', $categories);//$this->categories[$categoryIds[0]]->getName();
         } else {
             $trackingProductParams['category'] = null;
         }
@@ -295,7 +334,7 @@ class Tracking implements TrackingInterface
     /**
      * @inheritdoc
      */
-    public function loadCategories($ids)
+    public function loadCategoriesold($ids)
     {
         $categoriesCollection = $this->categoryCollectionFactory->create()
             ->addAttributeToSelect('name')
@@ -306,6 +345,28 @@ class Tracking implements TrackingInterface
         $this->categories = [];
         foreach ($categoriesCollection as $category) {
             $this->categories[$category->getId()] = $category;
+        }
+    }
+    public function loadCategories($ids)
+    {
+      $categoriesCollection = $this->categoryCollectionFactory->create()
+      ->addAttributeToSelect('path')
+      ->addAttributeToSelect('name');
+      /*->addFieldToFilter('entity_id', array_map(function ($id) {
+          return (string) $id; // fix wrong interpolation with 0
+      }, $ids));*/
+
+        $this->categories = [];
+        foreach ($categoriesCollection as $category) {
+            $structure = preg_split('#/+#', $category->getPath());
+            $pathSize  = count($structure);
+            if ($pathSize > 1) {
+                $path = array();
+                for ($i = 1; $i < $pathSize; $i++) {
+                    $path[] = $categoriesCollection->getItemById($structure[$i])->getName();
+                }
+                $this->categories[$category->getId()] = implode('/', $path);
+            }
         }
     }
 

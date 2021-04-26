@@ -175,6 +175,8 @@ class DataSender implements DataSenderInterface
               //$mydoc->AddMetadata('permanentid',$dataentry['sku']);
               $mydoc->permanentid = $dataentry['sku'];
               $alltext = '';
+              //Add sku to alltext
+              $alltext = $dataentry['sku'];
               foreach ($dataentry as $key => $value){
                 //encode the $value
                 //error_log($key.'==>'.$value);
@@ -208,6 +210,7 @@ class DataSender implements DataSenderInterface
                      $mydocv->AddMetadata('foldingcollection',$dataentry['sku']);
                      $mydocv->AddMetadata('foldingparent',$dataentry['sku']);
                      $mydocv->AddMetadata('foldingchild',$variant['sku']);
+                     $alltext = $alltext.' '.$variant['sku'];
                      $mydocv->permanentid = $variant['sku'];
                        } else {
                      //Treat as a product

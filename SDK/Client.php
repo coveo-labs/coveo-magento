@@ -233,7 +233,8 @@ class Client implements ClientInterface
             $response = $this->doRequest($path, self::HTTP_METHOD_GET, $params);
             $result = new SearchResult($response);
             $result->setQuery($query);
-            if ($this->_sessionStorage) {
+            //do not store searchId when use recommendation
+            if ($this->_sessionStorage && $this->_useRecommendations==false) {
                 $searchId = $result->getSearchId();
                 $this->_sessionStorage->setSearchId($searchId);
                 if($this->_logger){
@@ -298,7 +299,7 @@ class Client implements ClientInterface
 
         } catch (Exception $e) {
             $response = $e->getResponse();
-            if($response != null && $this->_sessionStorage){
+            if($response != null && $this->_sessionStorage && $this->_useRecommendations==false){
                 $result = new SearchResult($response);
                 $searchId = $result->getSearchId();
                 $this->_sessionStorage->setSearchId($searchId);

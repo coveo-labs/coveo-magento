@@ -76,6 +76,14 @@ interface TrackingInterface
     public function getProductTrackingParams($product, $position = 0, $quantity = 1);
 
     /**
+     * Get product tracking params
+     *
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @return null|array
+     */
+    public function getProductTrackingParamsPDP($product);
+
+    /**
      * Get order tracking params
      *
      * @param \Magento\Sales\Api\Data\OrderInterface $order
