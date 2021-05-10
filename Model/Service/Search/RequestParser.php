@@ -171,7 +171,7 @@ class RequestParser implements RequestParserInterface
         //Now we have the $orderValue in the form of price-desc
         if($orderType === 'relevance'){
           //Default, do nothing
-          return null;
+          return '';
         } else {
           //Translate to Coveo values
           //price-desc,price-asc,name-asc,name-desc
