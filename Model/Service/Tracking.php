@@ -455,7 +455,7 @@ class Tracking implements TrackingInterface
 
     public function getAnalytics()
     {
-        $myana=[/*"userIp"=> $this->getRemoteAddr(),*/
+        $myana=["userIp"=> $this->getRemoteAddr(),
         "userAgent"=>$this->getUserAgent(),
         /*'pageId'=>$this->getUuid(),*/
         'clientId'=>$this->session->getVisitorId(),
